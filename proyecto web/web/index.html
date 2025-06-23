@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuentra tu Espacio Ideal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Encuentra tu Espacio Ideal</h1>
+        <p>Descubre departamentos para tu próxima aventura o nueva etapa.</p>
+    </header>
+
+    <section id="listings">
+        <h2>Departamentos Disponibles</h2>
+        <div class="search-bar"> 
+            <input type="text" id="search-input" placeholder="Buscar por título o ubicación...">
+            <button id="search-button">Buscar</button>
+            <button id="clear-search-button" style="display:none;">Limpiar Búsqueda</button>
+        </div>
+        <div class="department-grid">
+            </div>
+    </section>
+
+    <section id="publish">
+        <h2>Publica tu Departamento</h2>
+        <p>Comparte tu espacio con nuestra comunidad.</p>
+        <button id="publish-button">Publicar un Departamento</button>
+    </section>
+
+    <div id="modal-publish" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3 id="modal-publish-title">Publicar Departamento</h3>
+            <form id="publish-form"> 
+                <div>
+                    <label for="title">Título:</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                <div>
+                    <label for="location">Ubicación:</label>
+                    <input type="text" id="location" name="location" required>
+                </div>
+                <div>
+                    <label for="contact">Número de Contacto:</label>
+                    <input type="tel" id="contact" name="contact" required>
+                </div>
+                <div>
+                    <label for="price">Precio (USD):</label>
+                    <input type="number" id="price" name="price" min="0" step="0.01" required>
+                </div>
+                <div>
+                    <label for="bedrooms">Habitaciones:</label>
+                    <input type="number" id="bedrooms" name="bedrooms" min="1" required>
+                </div>
+                <div>
+                    <label for="bathrooms">Baños:</label>
+                    <input type="number" id="bathrooms" name="bathrooms" min="1" step="0.5" required>
+                </div>
+                <div>
+                    <label for="description">Descripción:</label>
+                    <textarea id="description" name="description" rows="5" required></textarea>
+                </div>
+                <div>
+                    <label for="image_upload">Subir Imagen:</label>
+                    <input type="file" id="image_upload" name="image" accept="image/png, image/jpeg, image/gif">
+                    <p class="help-text">Solo se aceptan archivos PNG, JPG, JPEG, GIF.</p>
+                </div>
+                <div class="image-preview-container">
+                    <img id="image-preview" src="https://placehold.co/300x200/cccccc/FFFFFF?text=Sin+Imagen" alt="Vista previa de la imagen" style="max-width: 100%; height: auto; display: block; margin-top: 10px;">
+                </div>
+                <input type="hidden" id="image_url_unchanged" name="image_url_unchanged" value="true">
+                <button type="submit">Publicar</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-details" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3 id="department-title"></h3>
+            <p><strong>Ubicación:</strong> <span id="department-location"></span></p>
+            <p><strong>Contacto:</strong> <span id="department-contact"></span></p>
+            <p><strong>Precio:</strong> $<span id="department-price"></span></p>
+            <p><strong>Habitaciones:</strong> <span id="department-bedrooms"></span></p>
+            <p><strong>Baños:</strong> <span id="department-bathrooms"></span></p>
+            <p><strong>Descripción:</strong> <span id="department-description"></span></p>
+            <img id="department-image" src="" alt="Imagen del departamento" style="max-width: 100%;">
+            <button class="reserve-button">Reservar</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Encuentra tu Espacio Ideal</p>
+    </footer>
+
+    <div id="toast-container"></div> 
+    <script src="script.js"></script>
+</body>
+</html>
