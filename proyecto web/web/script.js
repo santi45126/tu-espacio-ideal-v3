@@ -69,9 +69,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- Base URL for the API (THIS IS THE CHANGE!) ---
+    // Make sure to replace 'tu-espacio-ideal-v3.onrender.com' with your actual Render service URL.
+    const API_BASE_URL = 'https://tu-espacio-ideal-v3.onrender.com';
+
     // --- FUNCTION TO GET AND DISPLAY DEPARTMENTS FROM THE BACKEND ---
     function fetchDepartments(query = '') {
-        let url = 'http://127.0.0.1:5000/api/departments';
+        let url = `${API_BASE_URL}/api/departments`; // Uses the new API_BASE_URL
         if (query) {
             url = `${url}?query=${encodeURIComponent(query)}`;
             clearSearchButton.style.display = 'inline-block';
@@ -203,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Function to delete a department ---
     function deleteDepartment(id) {
-        fetch(`http://127.0.0.1:5000/api/departments/${id}`, {
+        fetch(`${API_BASE_URL}/api/departments/${id}`, { // Uses the new API_BASE_URL
             method: 'DELETE'
         })
         .then(response => {
@@ -396,12 +400,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const editingId = publishForm.getAttribute('data-editing-id');
-        let url = 'http://127.0.0.1:5000/api/departments';
+        let url = `${API_BASE_URL}/api/departments`; // Uses the new API_BASE_URL
         let method = 'POST';
         let successMessage = '';
 
         if (editingId) {
-            url = `http://127.0.0.1:5000/api/departments/${editingId}`;
+            url = `${API_BASE_URL}/api/departments/${editingId}`; // Uses the new API_BASE_URL
             method = 'PUT';
             successMessage = '¡Departamento actualizado con éxito!';
         } else {
@@ -458,6 +462,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Event Listeners para la búsqueda ---
+    searchInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            searchButton.click();
+        }
+    });
+
     searchButton.addEventListener('click', () => {
         const query = searchInput.value;
         fetchDepartments(query);
@@ -466,13 +476,6 @@ document.addEventListener('DOMContentLoaded', () => {
     clearSearchButton.addEventListener('click', () => {
         searchInput.value = '';
         fetchDepartments();
-    });
-
-    // Permite buscar al presionar Enter en el campo de texto
-    searchInput.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter') {
-            searchButton.click();
-        }
     });
 
 }); // Cierre de document.addEventListener('DOMContentLoaded', ...)

@@ -82,11 +82,15 @@ header {
     border-radius: 8px;
     padding: 15px;
     box-shadow: 2px 2px 5px #ccc;
+    /* --- Añadido: Limitar el ancho máximo de la tarjeta --- */
+    max-width: 350px; /* Ejemplo: Limita el ancho de cada tarjeta a 350px */
+    justify-self: center; /* Centra la tarjeta dentro de su celda en la grilla */
 }
 
 .department-card img {
     width: 100%;
-    height: auto;
+    height: 200px; /* Altura fija */
+    object-fit: cover; /* Recorta la imagen para que cubra el área */
     border-radius: 5px;
     margin-bottom: 10px;
 }
@@ -170,14 +174,16 @@ header {
 
 #publish-form input[type="text"],
 #publish-form input[type="tel"],
-#publish-form input[type="url"] {
+#publish-form input[type="url"],
+#publish-form input[type="number"], /* Añadido para los campos de número */
+#publish-form textarea { /* Añadido para el campo de descripción */
     width: calc(100% - 12px); /* Ajustado para padding y borde */
     padding: 8px;
-    /* margin-bottom: 10px; */ /* Eliminado, el div lo maneja */
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
 }
+
 
 /* --- ESTILOS PARA MENSAJES DE ERROR DE VALIDACIÓN DE FORMULARIO --- */
 .error-message {
