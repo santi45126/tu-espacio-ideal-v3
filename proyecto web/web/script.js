@@ -116,8 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.classList.add('department-card');
             card.innerHTML = `
                 <h3>${dep.title}</h3>
-                <img src="${dep.image}" alt="${dep.title}">
-                <p>Ubicación: ${dep.location}</p>
+                <img src="${dep.image}" alt="${dep.title || 'Imagen de departamento'}"> <p>Ubicación: ${dep.location}</p>
                 <p>Precio: $${dep.price ? parseFloat(dep.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 'N/A'}</p>
                 <p>Habitaciones: ${dep.bedrooms || 'N/A'}</p>
                 <p>Baños: ${dep.bathrooms || 'N/A'}</p>
@@ -137,8 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('department-title').textContent = selectedDepartment.title;
                     document.getElementById('department-location').textContent = selectedDepartment.location;
                     document.getElementById('department-contact').textContent = selectedDepartment.contact;
-                    // Asegúrate de que la URL de la imagen se cargue correctamente
-                    document.getElementById('department-image').src = selectedDepartment.image; 
+                    // Asegúrate de que la URL de la imagen se cargue correctamente y tenga un alt
+                    document.getElementById('department-image').src = selectedDepartment.image;
+                    document.getElementById('department-image').alt = selectedDepartment.title || 'Imagen de departamento'; // Asegurarse que el modal de detalle también tiene alt
                     
                     // --- Display new fields in details modal ---
                     document.getElementById('department-price').textContent = selectedDepartment.price ? parseFloat(selectedDepartment.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 'N/A';
@@ -295,8 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // Si el usuario borra la selección de archivo, vuelve al placeholder
             imagePreview.src = 'https://placehold.co/300x200/cccccc/FFFFFF?text=Sin+Imagen';
-            // Si el input de archivo está vacío, la imagen "no se cambió" en el sentido de que no hay nuevo archivo
-            // pero si estamos editando, queremos saber si el usuario deliberadamente quitó la imagen.
+            // Si el input de archivo está vacío, la imagen "no se cambió" en el sentido de que no hay nuevo archivo.
             // Para el modo PUT, si no hay archivo y el input está vacío, trataremos esto como 'revertir a default'.
             imageUrlUnchangedInput.value = 'false'; // Se activa incluso si se vacía la selección
         }
