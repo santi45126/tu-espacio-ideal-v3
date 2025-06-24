@@ -46,7 +46,7 @@ class Department(db.Model):
     bathrooms = db.Column(db.Float, nullable=False)
     description = db.Column(db.Text, nullable=False)
     image = db.Column(db.String(200), nullable=False,
-                     default='https://placehold.co/300x200/cccccc/FFFFFF?text=Sin+Imagen')
+                      default='https://placehold.co/300x200/cccccc/FFFFFF?text=Sin+Imagen')
 
     def __repr__(self):
         return f"Department('{self.title}', '{self.location}', '{self.price}', '{self.image}')"
@@ -99,6 +99,11 @@ def get_departments():
 
 @app.route('/api/departments', methods=['POST'])
 def add_department():
+    # --- INICIO: Líneas de depuración agregadas ---
+    print(f"DEBUG: Contenido completo de request.form: {request.form}")
+    print(f"DEBUG: Contenido completo de request.files: {request.files}")
+    # --- FIN: Líneas de depuración agregadas ---
+
     title = request.form.get('title', '').strip()
     location = request.form.get('location', '').strip()
     contact = request.form.get('contact', '').strip()
@@ -107,10 +112,21 @@ def add_department():
     bathrooms_str = request.form.get('bathrooms')
     description = request.form.get('description', '').strip()
 
+    # --- INICIO: Líneas de depuración detalladas ---
+    print(f"DEBUG: title (from form) = {title!r}")
+    print(f"DEBUG: location (from form) = {location!r}")
+    print(f"DEBUG: contact (from form) = {contact!r}")
+    print(f"DEBUG: price_str (from form) = {price_str!r}")
+    print(f"DEBUG: bedrooms_str (from form) = {bedrooms_str!r}")
+    print(f"DEBUG: bathrooms_str (from form) = {bathrooms_str!r}")
+    print(f"DEBUG: description (from form) = {description!r}")
+    # --- FIN: Líneas de depuración detalladas ---
+
     image_file = request.files.get('image')
 
     errors = {}
 
+    # Validaciones
     if not title:
         errors['title'] = "El título es obligatorio."
     if not location:
