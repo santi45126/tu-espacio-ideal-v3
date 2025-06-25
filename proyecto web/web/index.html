@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Departamentos en Alquiler en Chimbas | Tu Espacio Ideal</title>
-    
     <meta name="description" content="Encuentra tu departamento ideal en Chimbas, San Juan. Alquiler de apartamentos con fotos, precios y contacto directo. Tu próximo hogar te espera.">
-    
     <meta name="keywords" content="departamentos Chimbas, alquiler Chimbas, apartamentos San Juan, propiedades Chimbas, buscar alquiler Chimbas, tu espacio ideal, San Juan, Argentina">
-
     <meta name="google-site-verification" content="4IgPMRaPXAJXkBQ5jLiRj-nhBahizzp4xSjYxtWzKf0" /> 
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
 <body>
-    <div id="toast-container"></div> <header>
-        <h1>Tu Espacio Ideal</h1> <p>Encuentra tu departamento perfecto en Chimbas, San Juan.</p>
+    <div id="toast-container"></div>
+
+    <header>
+        <h1>Tu Espacio Ideal</h1>
+        <p>Encuentra tu departamento perfecto en Chimbas, San Juan.</p>
     </header>
 
     <main>
@@ -40,6 +40,7 @@
                     <label for="max-price">Precio Máx ($):</label>
                     <input type="number" id="max-price" placeholder="Máximo">
                 </div>
+
                 <button id="search-button">Buscar</button>
                 <button id="clear-search-button">Limpiar</button>
             </div>
@@ -105,7 +106,8 @@
         <div class="modal-content">
             <span class="close-button">&times;</span>
             <h2 id="department-title"></h2>
-            <img id="department-image" src="" alt="Imagen del departamento en detalle"> <p><strong>Ubicación:</strong> <span id="department-location"></span></p>
+            <img id="department-image" src="" alt="Imagen del departamento en detalle" loading="lazy">
+            <p><strong>Ubicación:</strong> <span id="department-location"></span></p>
             <p><strong>Precio:</strong> $<span id="department-price"></span></p>
             <p><strong>Habitaciones:</strong> <span id="department-bedrooms"></span></p>
             <p><strong>Baños:</strong> <span id="department-bathrooms"></span></p>

@@ -116,7 +116,7 @@ function displayDepartments(departments) {
         const departmentCard = document.createElement('div');
         departmentCard.classList.add('department-card');
         departmentCard.innerHTML = `
-            <img src="${department.image_url || 'https://placehold.co/300x200/cccccc/FFFFFF?text=Imagen+No+Disponible'}" alt="Imagen del departamento en ${department.location || 'Chimbas'}" onerror="this.onerror=null;this.src='https://placehold.co/300x200/cccccc/FFFFFF?text=Error+al+cargar+imagen';">
+            <img src="${department.image_url || 'https://placehold.co/300x200/cccccc/FFFFFF?text=Imagen+No+Disponible'}" alt="Imagen del departamento en ${department.location || 'Chimbas'}" onerror="this.onerror=null;this.src='https://placehold.co/300x200/cccccc/FFFFFF?text=Error+al+cargar+imagen';" loading="lazy">
             <h3>${department.title || 'Departamento sin título'}</h3>
             <p><strong>Ubicación:</strong> ${department.location || 'Desconocida'}</p>
             <p><strong>Precio:</strong> $${(department.price || 0).toLocaleString('es-AR')}</p>
