@@ -1,5 +1,6 @@
+/* Estilos generales */
 body {
-    font-family: sans-serif;
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
@@ -7,120 +8,266 @@ body {
 }
 
 header {
-    background-color: #5cb85c;
+    background-color: #4CAF50;
     color: white;
-    padding: 20px;
+    padding: 1rem 0;
     text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-#listings {
+main {
     padding: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-#listings h2, #publish h2 {
+h1, h2 {
+    color: #333;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 30px;
+    background-color: #333;
+    color: white;
+}
+
+/* Sección de Listados */
+#listings h2 {
     text-align: center;
     margin-bottom: 20px;
+    color: #4CAF50;
 }
 
-/* --- ESTILOS PARA LA BARRA DE BÚSQUEDA --- */
+/* Barra de búsqueda y filtros */
 .search-bar {
-    display: flex; /* Permite que los elementos se alineen en fila */
-    gap: 10px; /* Espacio entre los elementos */
-    margin-bottom: 20px; /* Espacio debajo de la barra de búsqueda */
-    padding: 10px;
-    background-color: #e9e9e9;
-    border-radius: 8px;
-    align-items: center; /* Alinea verticalmente los elementos en el centro */
+    display: flex;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
+    gap: 10px; /* Espacio entre elementos */
+    margin-bottom: 20px;
+    justify-content: center; /* Centrar elementos */
+    align-items: flex-end; /* Alinear elementos al final */
 }
 
-.search-bar input[type="text"] {
-    flex-grow: 1; /* Hace que el input ocupe el espacio disponible */
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
+.search-bar input[type="text"],
+.search-bar button,
+.search-bar select,
+.search-bar input[type="number"] { /* Aplicar estilos a los nuevos inputs y select */
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
 }
 
 .search-bar button {
-    padding: 8px 15px;
-    border: none;
-    border-radius: 4px;
+    background-color: #4CAF50;
+    color: white;
     cursor: pointer;
-    font-size: 16px;
-    white-space: nowrap; /* Evita que el texto del botón se rompa */
+    transition: background-color 0.3s ease;
 }
 
-.search-bar #search-button {
-    background-color: #007bff;
-    color: white;
+.search-bar button:hover {
+    background-color: #45a049;
 }
 
-.search-bar #search-button:hover {
-    background-color: #0056b3;
+#clear-search-button {
+    background-color: #f44336;
 }
 
-.search-bar #clear-search-button {
-    background-color: #dc3545; /* Rojo para limpiar */
-    color: white;
+#clear-search-button:hover {
+    background-color: #da190b;
 }
 
-.search-bar #clear-search-button:hover {
-    background-color: #c82333;
+/* --- INICIO DE CAMBIOS PARA FILTROS EN CSS --- */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Espacio entre los elementos de filtro */
+    align-items: center;
 }
-/* --- FIN DE ESTILOS DE BÚSQUEDA --- */
+
+.filters label {
+    font-size: 0.9rem;
+    color: #555;
+    white-space: nowrap; /* Evita que el texto de la etiqueta se rompa */
+}
+
+.filters select,
+.filters input[type="number"] {
+    flex-grow: 1; /* Permite que los inputs de número y select crezcan */
+    max-width: 150px; /* Limita el ancho para que no sean demasiado grandes */
+}
+
+/* Ajustes responsivos para la barra de búsqueda y filtros */
+@media (max-width: 768px) {
+    .search-bar {
+        flex-direction: column; /* Apila elementos en pantallas pequeñas */
+        align-items: stretch; /* Estira elementos para ocupar el ancho */
+    }
+
+    .search-bar input[type="text"],
+    .search-bar button,
+    .search-bar select,
+    .search-bar input[type="number"] {
+        width: 100%; /* Ocupa todo el ancho disponible */
+        box-sizing: border-box; /* Incluye padding y borde en el ancho total */
+    }
+
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filters select,
+    .filters input[type="number"] {
+        max-width: 100%; /* Ocupa todo el ancho en pantallas pequeñas */
+    }
+}
+/* --- FIN DE CAMBIOS PARA FILTROS EN CSS --- */
 
 
+/* Grid de Departamentos */
 .department-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
+    padding: 20px 0;
 }
 
 .department-card {
-    background-color: white;
+    background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 15px;
-    box-shadow: 2px 2px 5px #ccc;
-    /* --- Añadido: Limitar el ancho máximo de la tarjeta --- */
-    max-width: 350px; /* Ejemplo: Limita el ancho de cada tarjeta a 350px */
-    justify-self: center; /* Centra la tarjeta dentro de su celda en la grilla */
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
 }
 
 .department-card img {
     width: 100%;
-    height: 200px; /* Altura fija */
-    object-fit: cover; /* Recorta la imagen para que cubra el área */
-    border-radius: 5px;
-    margin-bottom: 10px;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid #eee;
 }
 
-/* --- ESTILOS PARA MODALES --- */
+.department-card h3 {
+    padding: 10px 15px 0;
+    margin: 0;
+    font-size: 1.3rem;
+    color: #4CAF50;
+}
+
+.department-card p {
+    padding: 0 15px;
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+}
+
+.department-card button {
+    display: block;
+    width: calc(100% - 30px); /* Ancho del botón con padding */
+    padding: 10px 15px;
+    margin: 5px 15px; /* Margen para centrar y separar */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.details-button {
+    background-color: #007bff;
+    color: white;
+}
+
+.details-button:hover {
+    background-color: #0056b3;
+}
+
+.edit-button {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.edit-button:hover {
+    background-color: #e0a800;
+}
+
+.delete-button {
+    background-color: #dc3545;
+    color: white;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+
+/* Sección Publicar */
+#publish {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+#publish button {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#publish button:hover {
+    background-color: #218838;
+}
+
+/* Modales */
 .modal {
-    display: none; /* <--- CAMBIO CLAVE AQUÍ: OCULTAR POR DEFECTO */
-    position: fixed; /* Stay in place */
-    z-index: 100; /* Sit on top, ajustado para estar debajo de toasts */
+    display: none;
+    position: fixed;
+    z-index: 1;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    /* Estas propiedades (align-items, justify-content) son para cuando está visible */
-    align-items: center; 
-    justify-content: center;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    opacity: 0; /* Inicialmente transparente para la transición */
+    transition: opacity 0.3s ease; /* Transición de opacidad */
+}
+
+.modal.show {
+    opacity: 1; /* Visible para la transición */
 }
 
 .modal-content {
     background-color: #fefefe;
-    margin: auto; /* Centra el contenido */
-    padding: 20px;
+    margin: 5% auto; /* Ajustado el margen superior */
+    padding: 30px;
     border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
-    max-width: 500px; /* Limita el ancho máximo para una mejor lectura */
-    border-radius: 8px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
     position: relative;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Sombra para resaltar el modal */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-50px); /* Empieza un poco más arriba */
+    transition: transform 0.3s ease; /* Transición para el movimiento */
+}
+
+.modal.show .modal-content {
+    transform: translateY(0); /* Se mueve a su posición final */
 }
 
 .close-button {
@@ -129,193 +276,114 @@ header {
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 20px;
 }
 
 .close-button:hover,
 .close-button:focus {
-    color: black;
+    color: #333;
     text-decoration: none;
 }
-/* --- FIN DE ESTILOS PARA MODALES --- */
 
-
-#publish {
-    padding: 20px;
-    text-align: center;
-    background-color: #f9f9f9;
-    border-top: 1px solid #eee;
-}
-
-#publish-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-#publish-button:hover {
-    background-color: #0056b3;
-}
-
+/* Formulario dentro del modal */
 #publish-form div {
-    /* Agregado para el posicionamiento de error-message si fuera necesario, y espacio */
-    position: relative;
-    margin-bottom: 15px; /* Espacio entre los campos del formulario */
+    margin-bottom: 15px;
 }
 
 #publish-form label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
+    color: #555;
 }
 
 #publish-form input[type="text"],
 #publish-form input[type="tel"],
-#publish-form input[type="url"],
-#publish-form input[type="number"], /* Añadido para los campos de número */
-#publish-form textarea { /* Añadido para el campo de descripción */
-    width: calc(100% - 12px); /* Ajustado para padding y borde */
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+#publish-form input[type="number"],
+#publish-form textarea {
+    width: calc(100% - 22px); /* Ajuste para padding */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
 }
 
-
-/* --- ESTILOS PARA MENSAJES DE ERROR DE VALIDACIÓN DE FORMULARIO --- */
-.error-message {
-    color: #dc3545; /* Rojo más fuerte */
-    font-size: 0.85em;
-    margin-top: 5px; /* Separación del input */
-    display: block; /* Asegura que ocupe su propia línea */
+#publish-form textarea {
+    resize: vertical;
 }
-
-/* Opcional: Resaltar inputs con error. Requiere añadir la clase 'error-border' con JS */
-/* input.error-border {
-    border-color: #dc3545;
-    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
-} */
-/* --- FIN DE ESTILOS DE ERROR --- */
-
 
 #publish-form button[type="submit"] {
-    background-color: #5cb85c;
+    background-color: #4CAF50;
     color: white;
+    padding: 12px 20px;
     border: none;
-    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
-    margin-top: 10px; /* Añadido un poco de margen superior */
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
 }
 
 #publish-form button[type="submit"]:hover {
-    background-color: #4cae4c;
+    background-color: #45a049;
 }
 
-footer {
-    text-align: center;
-    padding: 10px;
-    background-color: #333;
-    color: white;
-    /* position: relative; */ /* Eliminado si no se va a usar un sticky footer */
-    bottom: 0;
-    width: 100%;
-}
-
-.reserve-button {
-    background-color: #ffc107;
-    color: #333;
-    border: none;
-    padding: 10px 20px;
+#image-preview {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-top: 10px;
+    border: 1px solid #ddd;
     border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 15px;
 }
 
-.reserve-button:hover {
-    background-color: #e0a800;
-}
-
-/* --- ESTILOS PARA NOTIFICACIONES TOAST (Consolidado) --- */
+/* Toast Notifications */
 #toast-container {
     position: fixed;
-    bottom: 20px; /* Aparición desde abajo */
-    left: 50%;
-    transform: translateX(-50%); /* Centrado horizontal */
-    z-index: 1000; /* Asegura que esté por encima de todo */
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centra los toasts si son más estrechos */
-    gap: 10px; /* Espacio entre múltiples toasts si aparecen */
+    gap: 10px;
 }
 
 .toast {
-    background-color: #333; /* Color de fondo oscuro por defecto */
+    background-color: #333;
     color: white;
-    padding: 12px 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    opacity: 0; /* Inicialmente invisible */
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out; /* Transición suave */
-    transform: translateY(30px); /* Empieza un poco más abajo para el efecto de subir */
-    min-width: 250px;
-    max-width: 90%; /* Limita el ancho en pantallas pequeñas */
-    text-align: center;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: translateX(100%);
+    animation: fadeInOut 3s forwards;
 }
 
-.toast.show {
-    opacity: 1; /* Se hace visible */
-    transform: translateY(0); /* Sube a su posición final */
-}
-
-/* Estilos para diferentes tipos de mensajes (éxito, error, info) */
 .toast.success {
-    background-color: #28a745; /* Verde para éxito */
+    background-color: #28a745;
 }
 
 .toast.error {
-    background-color: #dc3545; /* Rojo para error */
+    background-color: #dc3545;
 }
 
 .toast.info {
-    background-color: #17a2b8; /* Azul claro para información (nuevo) */
+    background-color: #007bff;
 }
-/* --- FIN DE ESTILOS TOAST --- */
 
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateX(100%); }
+    10% { opacity: 1; transform: translateX(0); }
+    90% { opacity: 1; transform: translateX(0); }
+    100% { opacity: 0; transform: translateX(100%); }
+}
 
-/* --- Media Queries para Responsividad (Opcional, pero buena práctica) --- */
-@media (max-width: 768px) {
-    .department-grid {
-        grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
-    }
+/* Responsividad para modales */
+@media (max-width: 600px) {
     .modal-content {
-        width: 90%;
-        margin: 10% auto; /* Ajuste para el margen en móviles */
-    }
-    .toast {
-        min-width: unset; /* Permite que el toast se ajuste mejor */
-        width: 90%;
-    }
-    #toast-container {
-        left: 10px;
-        right: 10px;
-        transform: none; /* Elimina la transformación para centrar mejor en móviles */
-        width: auto;
-        align-items: stretch; /* Estira los toasts para ocupar el ancho disponible */
-    }
-}
-
-@media (max-width: 480px) {
-    .search-bar {
-        flex-direction: column; /* Apila elementos de búsqueda en móviles */
-        align-items: stretch;
-    }
-    .search-bar input, .search-bar button {
-        width: 100%; /* Hacen que ocupen todo el ancho */
+        width: 95%;
+        margin: 20px auto;
+        padding: 20px;
     }
 }
