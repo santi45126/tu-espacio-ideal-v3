@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Departamentos en Alquiler</title>
+    <title>Tu Espacio Ideal - Departamentos en Alquiler</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <script type="module">
         // Importa las funciones que necesitas de los SDKs de Firebase
-        // Asegúrate de que la versión del SDK (11.9.1) sea consistente
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
         import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
@@ -37,7 +36,6 @@
         // const analytics = getAnalytics(app);
 
         // Expone las funciones de Firestore, Auth y Storage globalmente para script.min.js
-        // Esto es CRUCIAL para que script.min.js pueda acceder a ellas.
         window.collection = collection;
         window.getDocs = getDocs;
         window.addDoc = addDoc;
@@ -62,7 +60,7 @@
 <body>
     <header>
         <div class="header-content">
-            <h1>Mis Departamentos</h1>
+            <h1>Tu Espacio Ideal</h1>
             <nav>
                 <div class="user-actions">
                     <button id="publish-button">Publicar</button>
@@ -110,7 +108,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2025 Mis Departamentos. Todos los derechos reservados.</p>
+        <p>&copy; 2025 Tu Espacio Ideal. Todos los derechos reservados.</p>
     </footer>
 
     <div id="modal-publish" class="modal">
