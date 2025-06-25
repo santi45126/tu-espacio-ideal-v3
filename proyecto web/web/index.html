@@ -23,6 +23,23 @@
             <h2>Departamentos Disponibles</h2>
             <div class="search-bar">
                 <input type="text" id="search-input" placeholder="Buscar por ubicación, título, etc.">
+                
+                <div class="filters">
+                    <label for="min-bedrooms">Habitaciones (mín):</label>
+                    <select id="min-bedrooms">
+                        <option value="0">Cualquiera</option>
+                        <option value="1">1+</option>
+                        <option value="2">2+</option>
+                        <option value="3">3+</option>
+                        <option value="4">4+</option>
+                    </select>
+
+                    <label for="min-price">Precio Mín ($):</label>
+                    <input type="number" id="min-price" placeholder="Mínimo">
+
+                    <label for="max-price">Precio Máx ($):</label>
+                    <input type="number" id="max-price" placeholder="Máximo">
+                </div>
                 <button id="search-button">Buscar</button>
                 <button id="clear-search-button">Limpiar</button>
             </div>
