@@ -9,6 +9,7 @@
 
     <script type="module">
         // Importa las funciones que necesitas de los SDKs de Firebase
+        // Asegúrate de que la versión del SDK (11.9.1) sea consistente
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
         import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
@@ -18,12 +19,12 @@
 
         // ** Tu configuración de Firebase - ¡Asegúrate que estos valores sean los de tu proyecto! **
         const firebaseConfig = {
-            apiKey: "AIzaSyDrS-616DtW2ODUM_l6VbTf9SrcAq3qo1U", // REEMPLAZA ESTO
-            authDomain: "misdepartamentosapp.firebaseapp.com", // REEMPLAZA ESTO
-            projectId: "misdepartamentosapp", // REEMPLAZA ESTO
-            storageBucket: "misdepartamentosapp.firebasestorage.app", // REEMPLAZA ESTO
-            messagingSenderId: "894266053458", // REEMPLAZA ESTO
-            appId: "1:894266053458:web:6839bde6203a2aa9cae08b", // REEMPLAZA ESTO
+            apiKey: "AIzaSyDrS-616DtW2ODUM_l6VbTf9SrcAq3qo1U", // REEMPLAZA ESTO con tu API Key real
+            authDomain: "misdepartamentosapp.firebaseapp.com", // REEMPLAZA ESTO con tu Auth Domain real
+            projectId: "misdepartamentosapp", // REEMPLAZA ESTO con tu Project ID real
+            storageBucket: "misdepartamentosapp.firebasestorage.app", // REEMPLAZA ESTO con tu Storage Bucket real
+            messagingSenderId: "894266053458", // REEMPLAZA ESTO con tu Messaging Sender ID real
+            appId: "1:894266053458:web:6839bde6203a2aa9cae08b", // REEMPLAZA ESTO con tu App ID real
             measurementId: "G-1MQ3DE7671" // Esto es de Analytics, si no lo usas, puedes quitarlo
         };
 
@@ -36,6 +37,7 @@
         // const analytics = getAnalytics(app);
 
         // Expone las funciones de Firestore, Auth y Storage globalmente para script.min.js
+        // Esto es CRUCIAL para que script.min.js pueda acceder a ellas.
         window.collection = collection;
         window.getDocs = getDocs;
         window.addDoc = addDoc;

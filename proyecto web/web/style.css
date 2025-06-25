@@ -1,349 +1,432 @@
-/* Estilos generales */
-body {
-    font-family: Arial, sans-serif;
+/* Importar fuente de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+:root {
+    /* Paleta de colores */
+    --primary-color: #2c3e50; /* Azul oscuro/grisáceo para headers/footers */
+    --secondary-color: #3498db; /* Azul vibrante para botones/highlights */
+    --accent-color: #2ecc71; /* Verde para éxito */
+    --danger-color: #e74c3c; /* Rojo para errores/borrar */
+    --light-bg: #ecf0f1; /* Fondo muy claro */
+    --dark-text: #333; /* Texto oscuro */
+    --light-text: #fdfdfd; /* Texto claro */
+    --card-bg: #ffffff; /* Fondo de tarjetas */
+    --border-color: #dfe6e9; /* Color de borde sutil */
+    --shadow-light: rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
+
+/* Reset básico y estilos generales */
+*, *::before, *::after {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
 }
 
-header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 1rem 0;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-main {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 20px auto;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-h1, h2 {
-    color: #333;
-}
-
-footer {
-    text-align: center;
-    padding: 20px;
-    margin-top: 30px;
-    background-color: #333;
-    color: white;
-}
-
-/* Sección de Listados */
-#listings h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #4CAF50;
-}
-
-/* Barra de búsqueda y filtros */
-.search-bar {
-    display: flex;
-    flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
-    gap: 10px; /* Espacio entre elementos */
-    margin-bottom: 20px;
-    justify-content: center; /* Centrar elementos */
-    align-items: flex-end; /* Alinear elementos al final */
-}
-
-.search-bar input[type="text"],
-.search-bar button,
-.search-bar select,
-.search-bar input[type="number"] { /* Aplicar estilos a los nuevos inputs y select */
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-}
-
-.search-bar button {
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.search-bar button:hover {
-    background-color: #45a049;
-}
-
-#clear-search-button {
-    background-color: #f44336;
-}
-
-#clear-search-button:hover {
-    background-color: #da190b;
-}
-
-/* --- INICIO DE CAMBIOS PARA FILTROS EN CSS --- */
-.filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px; /* Espacio entre los elementos de filtro */
-    align-items: center;
-}
-
-.filters label {
-    font-size: 0.9rem;
-    color: #555;
-    white-space: nowrap; /* Evita que el texto de la etiqueta se rompa */
-}
-
-.filters select,
-.filters input[type="number"] {
-    flex-grow: 1; /* Permite que los inputs de número y select crezcan */
-    max-width: 150px; /* Limita el ancho para que no sean demasiado grandes */
-}
-
-/* Ajustes responsivos para la barra de búsqueda y filtros */
-@media (max-width: 768px) {
-    .search-bar {
-        flex-direction: column; /* Apila elementos en pantallas pequeñas */
-        align-items: stretch; /* Estira elementos para ocupar el ancho */
-    }
-
-    .search-bar input[type="text"],
-    .search-bar button,
-    .search-bar select,
-    .search-bar input[type="number"] {
-        width: 100%; /* Ocupa todo el ancho disponible */
-        box-sizing: border-box; /* Incluye padding y borde en el ancho total */
-    }
-
-    .filters {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .filters select,
-    .filters input[type="number"] {
-        max-width: 100%; /* Ocupa todo el ancho en pantallas pequeñas */
-    }
-}
-/* --- FIN DE CAMBIOS PARA FILTROS EN CSS --- */
-
-
-/* Grid de Departamentos */
-.department-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-    padding: 20px 0;
-}
-
-.department-card {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    color: var(--dark-text);
+    background-color: var(--light-bg);
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Encabezado */
+header {
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    padding: 20px 0;
+    box-shadow: 0 2px 5px var(--shadow-light);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-content {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+header h1 {
+    font-size: 2.2em;
+    margin-bottom: 10px; /* Espacio debajo del título en móviles */
+    width: 100%; /* Ocupa todo el ancho en móviles */
+    text-align: center;
+}
+
+header nav {
+    width: 100%; /* Ocupa todo el ancho en móviles */
+    text-align: center;
+    margin-top: 10px;
+}
+
+.user-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Estilo para los botones principales del header */
+header button {
+    background-color: var(--secondary-color);
+    color: var(--light-text);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Evita que el texto del botón se rompa */
+}
+
+header button:hover {
+    background-color: #2980b9; /* Un tono más oscuro de azul */
+}
+
+/* Info del usuario logueado */
+.user-info {
+    color: var(--light-text);
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.9em;
+    width: 100%;
+}
+.user-info span {
+    display: block; /* Cada span en su propia línea */
+}
+
+
+/* Barra de búsqueda y filtros */
+.search-filters {
+    background-color: #f8f8f8;
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    max-width: 1200px;
+    margin: 15px auto 0 auto; /* Margen superior para separarlo del header */
+    border-radius: 8px;
+    box-shadow: 0 1px 3px var(--shadow-light);
+}
+
+.search-filters input[type="text"],
+.search-filters input[type="number"],
+.search-filters select {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.9em;
+    flex: 1 1 150px; /* Flexibilidad para los campos de filtro */
+    min-width: 120px; /* Ancho mínimo */
+}
+
+.search-filters button {
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+.search-filters button:hover {
+    background-color: #1e2b38;
+}
+
+.search-filters label {
+    font-size: 0.9em;
+    color: var(--dark-text);
+    align-self: center; /* Alinea el label con los inputs */
+    white-space: nowrap; /* Evita que el label se rompa */
+}
+
+
+/* Contenido principal */
+main {
+    flex-grow: 1; /* Hace que el main ocupe el espacio disponible */
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+.department-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 20px 0;
+}
+
+.department-card {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px var(--shadow-light);
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 15px; /* Espacio para los botones */
+}
+
+.department-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
 .department-card img {
     width: 100%;
-    height: 200px;
+    height: 200px; /* Altura fija para las imágenes de las tarjetas */
     object-fit: cover;
-    border-bottom: 1px solid #eee;
+    display: block;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .department-card h3 {
-    padding: 10px 15px 0;
-    margin: 0;
-    font-size: 1.3rem;
-    color: #4CAF50;
+    font-size: 1.4em;
+    margin: 15px 15px 10px;
+    color: var(--primary-color);
 }
 
 .department-card p {
-    padding: 0 15px;
-    font-size: 0.95rem;
-    margin-bottom: 5px;
+    font-size: 0.95em;
+    margin: 0 15px 8px;
+    color: var(--dark-text);
+}
+
+.department-card p strong {
+    color: var(--secondary-color);
 }
 
 .department-card button {
-    display: block;
-    width: calc(100% - 30px); /* Ancho del botón con padding */
-    padding: 10px 15px;
-    margin: 5px 15px; /* Margen para centrar y separar */
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 5px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.9em;
     transition: background-color 0.3s ease;
+    flex-shrink: 0; /* Evita que los botones se encojan */
 }
 
-.details-button {
-    background-color: #007bff;
-    color: white;
+.department-card .details-button {
+    background-color: var(--secondary-color);
+    color: var(--light-text);
 }
 
-.details-button:hover {
-    background-color: #0056b3;
+.department-card .details-button:hover {
+    background-color: #2980b9;
 }
 
-.edit-button {
-    background-color: #ffc107;
-    color: #333;
+.department-card .edit-button {
+    background-color: #f39c12; /* Naranja para editar */
+    color: var(--light-text);
 }
 
-.edit-button:hover {
-    background-color: #e0a800;
+.department-card .edit-button:hover {
+    background-color: #e67e22;
 }
 
-.delete-button {
-    background-color: #dc3545;
-    color: white;
+.department-card .delete-button {
+    background-color: var(--danger-color);
+    color: var(--light-text);
 }
 
-.delete-button:hover {
-    background-color: #c82333;
+.department-card .delete-button:hover {
+    background-color: #c0392b;
 }
 
-
-/* Sección Publicar */
-#publish {
+/* Footer */
+footer {
+    background-color: var(--primary-color);
+    color: var(--light-text);
     text-align: center;
-    margin-top: 40px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
+    padding: 20px 0;
+    margin-top: 30px;
+    box-shadow: 0 -2px 5px var(--shadow-light);
 }
 
-#publish button {
-    background-color: #28a745;
-    color: white;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#publish button:hover {
-    background-color: #218838;
-}
-
-/* Modales */
+/* Modales (publicar, detalles, autenticación) */
 .modal {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 1001; /* Más alto que el header */
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    opacity: 0; /* Inicialmente transparente para la transición */
-    transition: opacity 0.3s ease; /* Transición de opacidad */
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .modal.show {
-    opacity: 1; /* Visible para la transición */
+    opacity: 1;
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: 5% auto; /* Ajustado el margen superior */
+    background-color: var(--card-bg);
+    margin: 5% auto; /* Ajustado para mejor centrado */
     padding: 30px;
-    border: 1px solid #888;
     border-radius: 10px;
-    width: 80%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 90%;
     max-width: 600px;
     position: relative;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transform: translateY(-50px); /* Empieza un poco más arriba */
-    transition: transform 0.3s ease; /* Transición para el movimiento */
+    transform: translateY(-20px);
+    transition: transform 0.3s ease-out;
 }
 
 .modal.show .modal-content {
-    transform: translateY(0); /* Se mueve a su posición final */
+    transform: translateY(0);
 }
 
-.close-button {
-    color: #aaa;
-    float: right;
+.modal-content h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.8em;
+}
+
+.modal-content .close-button {
+    color: var(--dark-text);
+    position: absolute;
+    top: 15px;
+    right: 25px;
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
-    position: absolute;
-    top: 10px;
-    right: 20px;
+    transition: color 0.3s ease;
 }
 
-.close-button:hover,
-.close-button:focus {
-    color: #333;
+.modal-content .close-button:hover,
+.modal-content .close-button:focus {
+    color: var(--danger-color);
     text-decoration: none;
 }
 
-/* Formulario dentro del modal */
-#publish-form div {
-    margin-bottom: 15px;
-}
-
-#publish-form label {
+.modal-content form label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     font-weight: bold;
-    color: #555;
+    color: var(--dark-text);
 }
 
-#publish-form input[type="text"],
-#publish-form input[type="tel"],
-#publish-form input[type="number"],
-#publish-form textarea {
-    width: calc(100% - 22px); /* Ajuste para padding */
+.modal-content form input[type="text"],
+.modal-content form input[type="email"],
+.modal-content form input[type="password"],
+.modal-content form input[type="number"],
+.modal-content form input[type="file"],
+.modal-content form textarea {
+    width: calc(100% - 20px); /* Ajuste para padding */
     padding: 10px;
-    border: 1px solid #ddd;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
-    font-size: 1rem;
+    font-size: 1em;
+    display: block; /* Asegura que ocupen todo el ancho */
 }
 
-#publish-form textarea {
+.modal-content form textarea {
     resize: vertical;
+    min-height: 80px;
 }
 
-#publish-form button[type="submit"] {
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    transition: background-color 0.3s ease;
+.modal-content form input[type="file"] {
+    padding: 5px; /* Menos padding para el input file */
 }
 
-#publish-form button[type="submit"]:hover {
-    background-color: #45a049;
-}
-
-#image-preview {
+.modal-content form img#image-preview,
+.modal-content .modal-image {
     max-width: 100%;
     height: auto;
+    max-height: 250px; /* Altura máxima para imágenes grandes en modal */
+    object-fit: contain; /* Contiene la imagen sin recortar */
     display: block;
-    margin-top: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    margin: 15px auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px var(--shadow-light);
 }
+
+.modal-content form button[type="submit"],
+.modal-content .contact-toggle-button {
+    background-color: var(--secondary-color);
+    color: var(--light-text);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.modal-content form button[type="submit"]:hover,
+.modal-content .contact-toggle-button:hover {
+    background-color: #2980b9;
+}
+
+.modal-content .auth-toggle {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.9em;
+}
+
+.modal-content .auth-toggle a {
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+.modal-content .auth-toggle a:hover {
+    text-decoration: underline;
+}
+
+/* Contact form inside details modal */
+#contact-form-container {
+    background-color: #f9f9f9;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+#contact-form-container h3 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+#contact-form-container button[type="submit"] {
+    background-color: var(--accent-color);
+}
+#contact-form-container button[type="submit"]:hover {
+    background-color: #27ae60;
+}
+
 
 /* Toast Notifications */
 #toast-container {
     position: fixed;
-    top: 20px;
+    bottom: 20px;
     right: 20px;
-    z-index: 1000;
+    z-index: 1002;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -351,39 +434,159 @@ footer {
 
 .toast {
     background-color: #333;
-    color: white;
-    padding: 10px 20px;
+    color: var(--light-text);
+    padding: 12px 20px;
     border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     opacity: 0;
     transform: translateX(100%);
-    animation: fadeInOut 3s forwards;
+    animation: slideIn 0.5s forwards, fadeOut 0.5s 2.5s forwards;
+    min-width: 250px;
+    font-size: 0.95em;
 }
 
 .toast.success {
-    background-color: #28a745;
+    background-color: var(--accent-color);
 }
 
 .toast.error {
-    background-color: #dc3545;
+    background-color: var(--danger-color);
 }
 
 .toast.info {
-    background-color: #007bff;
+    background-color: var(--secondary-color);
 }
 
-@keyframes fadeInOut {
-    0% { opacity: 0; transform: translateX(100%); }
-    10% { opacity: 1; transform: translateX(0); }
-    90% { opacity: 1; transform: translateX(0); }
-    100% { opacity: 0; transform: translateX(100%); }
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
-/* Responsividad para modales */
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+/* Paginación */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+    padding: 10px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px var(--shadow-light);
+}
+
+.pagination-button {
+    background-color: var(--light-bg);
+    color: var(--dark-text);
+    border: 1px solid var(--border-color);
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.pagination-button:hover:not(:disabled) {
+    background-color: var(--secondary-color);
+    color: var(--light-text);
+    border-color: var(--secondary-color);
+}
+
+.pagination-button.active {
+    background-color: var(--secondary-color);
+    color: var(--light-text);
+    border-color: var(--secondary-color);
+    font-weight: bold;
+}
+
+.pagination-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Estilo para el texto resaltado en la búsqueda */
+.highlight {
+    background-color: yellow;
+    padding: 2px 0;
+    border-radius: 3px;
+}
+
+/* Media Queries para Responsividad */
+@media (min-width: 768px) {
+    header h1 {
+        width: auto;
+        margin-bottom: 0;
+        text-align: left;
+    }
+
+    header nav {
+        width: auto;
+        margin-top: 0;
+    }
+
+    .user-info {
+        text-align: right;
+        margin-top: 0;
+    }
+    .user-info span {
+        display: inline-block; /* En línea en escritorio */
+        margin-left: 10px; /* Espacio entre nombre y email */
+    }
+
+    .search-filters {
+        justify-content: flex-start; /* Alinea a la izquierda en desktop */
+    }
+}
+
 @media (max-width: 600px) {
     .modal-content {
-        width: 95%;
-        margin: 20px auto;
+        margin: 2% auto; /* Más cerca de la parte superior en móviles */
         padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.8em;
+    }
+    header button {
+        padding: 8px 12px;
+        font-size: 0.85em;
+    }
+    .search-filters input,
+    .search-filters select,
+    .search-filters button {
+        font-size: 0.85em;
+        padding: 6px 10px;
+    }
+    .department-card h3 {
+        font-size: 1.2em;
+    }
+    .department-card p {
+        font-size: 0.85em;
+    }
+    .department-card button {
+        padding: 6px 10px;
+        font-size: 0.8em;
+    }
+    .toast {
+        min-width: unset;
+        width: calc(100% - 40px);
+        left: 20px;
+        right: 20px;
+        bottom: 10px;
+    }
+    .pagination-button {
+        padding: 6px 12px;
+        font-size: 0.9em;
     }
 }
