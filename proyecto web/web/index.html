@@ -15,6 +15,7 @@
     <header>
         <h1>Buscador de Departamentos</h1>
         <button id="user-action-button" class="header-button" data-view="all">Iniciar Sesión / Registrarse</button>
+        <button id="logout-button" class="header-button logout-button" style="display: none;">Cerrar Sesión</button>
         </header>
     <main>
         <section id="search-filters">
@@ -152,7 +153,8 @@
         <div class="modal-content">
             <span class="close-button">&times;</span>
             <h2 id="auth-title">Inicia Sesión o Regístrate</h2>
-            <form id="auth-form" data-mode="register"> <div id="auth-name-group">
+            <form id="auth-form" data-mode="register">
+                <div id="auth-name-group">
                     <label for="auth-name">Nombre (para Registro):</label>
                     <input type="text" id="auth-name">
                 </div>
@@ -167,6 +169,7 @@
             </form>
         </div>
     </div>
+
     <footer>
         <p>&copy; 2024 Buscador de Departamentos. Todos los derechos reservados.</p>
     </footer>
