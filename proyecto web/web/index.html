@@ -8,22 +8,22 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <script type="module">
-        // Importa las funciones que necesitás de los SDKs de Firebase
+        // Importa las funciones que necesitas de los SDKs de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
         import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
-        // Si vas a usar Analytics, también importalo:
+        // Si vas a usar Analytics, también impórtalo (descomenta la línea de abajo):
         // import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
 
-        // Tu configuración de Firebase - ¡Asegurate que estos valores sean los de tu proyecto!
+        // ** Tu configuración de Firebase - ¡Asegúrate que estos valores sean los de tu proyecto! **
         const firebaseConfig = {
-            apiKey: "AIzaSyDrS-616DtW2ODUM_l6VbTf9SrcAq3qo1U",
-            authDomain: "misdepartamentosapp.firebaseapp.com",
-            projectId: "misdepartamentosapp",
-            storageBucket: "misdepartamentosapp.firebasestorage.app",
-            messagingSenderId: "894266053458",
-            appId: "1:894266053458:web:6839bde6203a2aa9cae08b",
+            apiKey: "AIzaSyDrS-616DtW2ODUM_l6VbTf9SrcAq3qo1U", // REEMPLAZA ESTO
+            authDomain: "misdepartamentosapp.firebaseapp.com", // REEMPLAZA ESTO
+            projectId: "misdepartamentosapp", // REEMPLAZA ESTO
+            storageBucket: "misdepartamentosapp.firebasestorage.app", // REEMPLAZA ESTO
+            messagingSenderId: "894266053458", // REEMPLAZA ESTO
+            appId: "1:894266053458:web:6839bde6203a2aa9cae08b", // REEMPLAZA ESTO
             measurementId: "G-1MQ3DE7671" // Esto es de Analytics, si no lo usas, puedes quitarlo
         };
 
@@ -32,7 +32,7 @@
         window.db = getFirestore(app);         // Base de datos Firestore
         window.auth = getAuth(app);             // Autenticación
         window.storage = getStorage(app);       // Almacenamiento (para imágenes)
-        // Si vas a usar Analytics:
+        // Si vas a usar Analytics (descomenta la línea de abajo):
         // const analytics = getAnalytics(app);
 
         // Expone las funciones de Firestore, Auth y Storage globalmente para script.min.js
@@ -189,7 +189,7 @@
                 <label for="auth-email">Email:</label>
                 <input type="email" id="auth-email" required>
                 <label for="auth-password">Contraseña:</label>
-                <input type="password" id="auth-password" required minlength="6">
+                <input type="password" id="auth-password" required minlength="6" autocomplete="current-password">
                 
                 <button type="submit">Continuar</button>
                 <p class="auth-toggle"><a href="#" id="auth-toggle-link">¿Ya tienes una cuenta? Inicia Sesión aquí.</a></p>
