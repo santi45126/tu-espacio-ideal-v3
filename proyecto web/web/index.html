@@ -8,20 +8,23 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <script type="module">
-        // Importa los módulos de Firebase que vas a usar
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+        // Importa las funciones que necesitás de los SDKs de Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
+        // Si vas a usar Analytics, también importalo:
+        // import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
 
-        // ** TU CONFIGURACIÓN DE FIREBASE (¡REEMPLAZÁ ESTOS VALORES CON LOS REALES DE TU PROYECTO!) **
+        // Tu configuración de Firebase - ¡Asegurate que estos valores sean los de tu proyecto!
         const firebaseConfig = {
-          apiKey: "TU_API_KEY_AQUI", // Ejemplo: "AIzaSyC..."
-          authDomain: "TU_AUTH_DOMAIN_AQUI", // Ejemplo: "tu-proyecto.firebaseapp.com"
-          projectId: "TU_PROJECT_ID_AQUI", // Ejemplo: "tu-proyecto"
-          storageBucket: "TU_STORAGE_BUCKET_AQUI", // Ejemplo: "tu-proyecto.appspot.com"
-          messagingSenderId: "TU_MESSAGING_SENDER_ID_AQUI", // Ejemplo: "..."
-          appId: "TU_APP_ID_AQUI" // Ejemplo: "1:..."
+            apiKey: "AIzaSyDrS-616DtW2ODUM_l6VbTf9SrcAq3qo1U",
+            authDomain: "misdepartamentosapp.firebaseapp.com",
+            projectId: "misdepartamentosapp",
+            storageBucket: "misdepartamentosapp.firebasestorage.app",
+            messagingSenderId: "894266053458",
+            appId: "1:894266053458:web:6839bde6203a2aa9cae08b",
+            measurementId: "G-1MQ3DE7671" // Esto es de Analytics, si no lo usas, puedes quitarlo
         };
 
         // Inicializa Firebase
@@ -29,6 +32,8 @@
         window.db = getFirestore(app);         // Base de datos Firestore
         window.auth = getAuth(app);             // Autenticación
         window.storage = getStorage(app);       // Almacenamiento (para imágenes)
+        // Si vas a usar Analytics:
+        // const analytics = getAnalytics(app);
 
         // Expone las funciones de Firestore, Auth y Storage globalmente para script.min.js
         window.collection = collection;
@@ -44,7 +49,7 @@
         window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
         window.onAuthStateChanged = onAuthStateChanged;
         window.signOut = signOut;
-        window.updateProfile = updateProfile; // Asegurarse de exportar updateProfile
+        window.updateProfile = updateProfile;
 
         window.ref = ref;
         window.uploadBytes = uploadBytes;
@@ -63,6 +68,10 @@
                     <button id="logout-button" style="display: none;">Cerrar Sesión</button>
                 </div>
             </nav>
+        </div>
+        <div class="user-info">
+            <span id="user-name-display"></span><br>
+            <span id="user-email-display"></span>
         </div>
         <div class="search-filters">
             <input type="text" id="search-input" placeholder="Buscar por título, ubicación o descripción...">
