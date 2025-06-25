@@ -4,109 +4,136 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Departamentos en Alquiler</title>
-    <meta name="description" content="Encuentra tu próximo departamento ideal en nuestra amplia selección de alquileres.">
-    <meta name="keywords" content="departamentos, alquiler, propiedades, vivienda, buscar departamento, alquileres, inmuebles">
-    <meta name="author" content="Santiago">
-    <meta name="google-site-verification" content="TU_CODIGO_DE_VERIFICACION_DE_GOOGLE" />
-    <link rel="stylesheet" href="style.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <script type="module">
+        // Importa los módulos de Firebase que vas a usar
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+        // ** TU CONFIGURACIÓN DE FIREBASE (¡REEMPLAZÁ ESTOS VALORES CON LOS REALES DE TU PROYECTO!) **
+        const firebaseConfig = {
+          apiKey: "TU_API_KEY_AQUI", // Ejemplo: "AIzaSyC..."
+          authDomain: "TU_AUTH_DOMAIN_AQUI", // Ejemplo: "tu-proyecto.firebaseapp.com"
+          projectId: "TU_PROJECT_ID_AQUI", // Ejemplo: "tu-proyecto"
+          storageBucket: "TU_STORAGE_BUCKET_AQUI", // Ejemplo: "tu-proyecto.appspot.com"
+          messagingSenderId: "TU_MESSAGING_SENDER_ID_AQUI", // Ejemplo: "..."
+          appId: "TU_APP_ID_AQUI" // Ejemplo: "1:..."
+        };
+
+        // Inicializa Firebase
+        const app = initializeApp(firebaseConfig);
+        window.db = getFirestore(app);         // Base de datos Firestore
+        window.auth = getAuth(app);             // Autenticación
+        window.storage = getStorage(app);       // Almacenamiento (para imágenes)
+
+        // Expone las funciones de Firestore, Auth y Storage globalmente para script.min.js
+        window.collection = collection;
+        window.getDocs = getDocs;
+        window.addDoc = addDoc;
+        window.updateDoc = updateDoc;
+        window.deleteDoc = deleteDoc;
+        window.doc = doc;
+        window.query = query;
+        window.where = where;
+
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+        window.onAuthStateChanged = onAuthStateChanged;
+        window.signOut = signOut;
+        window.updateProfile = updateProfile; // Asegurarse de exportar updateProfile
+
+        window.ref = ref;
+        window.uploadBytes = uploadBytes;
+        window.getDownloadURL = getDownloadURL;
+    </script>
+    <script src="script.min.js" type="module"></script>
 </head>
 <body>
-    <div id="toast-container"></div>
     <header>
-        <h1>Buscador de Departamentos</h1>
-        <button id="user-action-button" class="header-button" data-view="all">Iniciar Sesión / Registrarse</button>
-        <button id="logout-button" class="header-button logout-button" style="display: none;">Cerrar Sesión</button>
-        </header>
-    <main>
-        <section id="search-filters">
-            <div class="search-bar">
-                <input type="text" id="search-input" placeholder="Buscar por título, ubicación o descripción...">
-                <button id="search-button">Buscar</button>
-                <button id="clear-search-button">Limpiar Búsqueda</button>
-            </div>
-            <div class="filters">
-                <label for="min-bedrooms">Habitaciones mínimas:</label>
-                <select id="min-bedrooms">
-                    <option value="0">Cualquiera</option>
-                    <option value="1">1+</option>
-                    <option value="2">2+</option>
-                    <option value="3">3+</option>
-                    <option value="4">4+</option>
-                </select>
-
-                <label for="min-price">Precio Mín.:</label>
-                <input type="number" id="min-price" placeholder="Desde">
-
-                <label for="max-price">Precio Máx.:</label>
-                <input type="number" id="max-price" placeholder="Hasta">
-            </div>
-            <div class="sort-controls">
-                <label for="sort-by">Ordenar por:</label>
-                <select id="sort-by">
-                    <option value="none">Sin ordenar</option>
-                    <option value="price-asc">Precio (Menor a Mayor)</option>
-                    <option value="price-desc">Precio (Mayor a Menor)</option>
-                    <option value="bedrooms-asc">Habitaciones (Menor a Mayor)</option>
-                    <option value="bedrooms-desc">Habitaciones (Mayor a Menor)</option>
-                </select>
-            </div>
-        </section>
-
-        <section id="listings">
-            <h2>Departamentos en Alquiler</h2>
-            <div class="department-grid">
+        <div class="header-content">
+            <h1>Mis Departamentos</h1>
+            <nav>
+                <div class="user-actions">
+                    <button id="publish-button">Publicar</button>
+                    <button id="user-action-button">Iniciar Sesión / Registrarse</button>
+                    <button id="logout-button" style="display: none;">Cerrar Sesión</button>
                 </div>
-        </section>
+            </nav>
+        </div>
+        <div class="search-filters">
+            <input type="text" id="search-input" placeholder="Buscar por título, ubicación o descripción...">
+            <button id="search-button">Buscar</button>
+            <button id="clear-search-button">Limpiar Filtros</button>
+            <label for="min-bedrooms">Habitaciones:</label>
+            <select id="min-bedrooms">
+                <option value="0">Cualquiera</option>
+                <option value="1">1+</option>
+                <option value="2">2+</option>
+                <option value="3">3+</option>
+                <option value="4">4+</option>
+            </select>
+            <label for="min-price">Precio Mínimo:</label>
+            <input type="number" id="min-price" placeholder="$ Min">
+            <label for="max-price">Precio Máximo:</label>
+            <input type="number" id="max-price" placeholder="$ Max">
+            <label for="sort-by">Ordenar por:</label>
+            <select id="sort-by">
+                <option value="none">Ninguno</option>
+                <option value="price_asc">Precio (Asc)</option>
+                <option value="price_desc">Precio (Desc)</option>
+                <option value="bedrooms_asc">Habitaciones (Asc)</option>
+                <option value="bedrooms_desc">Habitaciones (Desc)</option>
+            </select>
+        </div>
+    </header>
 
-        <div class="pagination-controls" id="pagination-controls">
+    <main>
+        <div class="department-grid">
             </div>
-
-        <section id="publish">
-            <h2>¿Tienes un departamento para alquilar?</h2>
-            <button id="publish-button">Publicar Departamento</button>
-        </section>
+        <div id="pagination-controls" class="pagination-controls">
+            </div>
     </main>
+
+    <footer>
+        <p>&copy; 2025 Mis Departamentos. Todos los derechos reservados.</p>
+    </footer>
 
     <div id="modal-publish" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
             <h2 id="modal-publish-title">Publicar Nuevo Departamento</h2>
             <form id="publish-form">
-                <div>
-                    <label for="title">Título:</label>
-                    <input type="text" id="title" name="title" required>
-                </div>
-                <div>
-                    <label for="location">Ubicación:</label>
-                    <input type="text" id="location" name="location" required>
-                </div>
-                <div>
-                    <label for="contact">Contacto (Email o Teléfono):</label>
-                    <input type="text" id="contact" name="contact" placeholder="ejemplo@correo.com o +54 9 11 12345678" required>
-                </div>
-                <div>
-                    <label for="price">Precio:</label>
-                    <input type="number" id="price" name="price" min="0" step="any" required>
-                </div>
-                <div>
-                    <label for="bedrooms">Habitaciones:</label>
-                    <input type="number" id="bedrooms" name="bedrooms" min="1" step="1" required>
-                </div>
-                <div>
-                    <label for="bathrooms">Baños:</label>
-                    <input type="number" id="bathrooms" name="bathrooms" min="1" step="any" required>
-                </div>
-                <div>
-                    <label for="description">Descripción:</label>
-                    <textarea id="description" name="description" rows="5"></textarea>
-                </div>
-                <div>
-                    <label for="image_upload">Imagen del Departamento:</label>
-                    <input type="file" id="image_upload" accept="image/*">
-                    <input type="hidden" id="image_url_unchanged" value="true">
-                    <img id="image-preview" src="https://placehold.co/300x200/cccccc/FFFFFF?text=Sin+Imagen" alt="Previsualización de imagen" style="max-width: 100%; height: auto; display: block; margin-top: 10px;">
-                </div>
-                <button type="submit">Guardar Departamento</button>
+                <label for="title">Título:</label>
+                <input type="text" id="title" name="title" required>
+
+                <label for="location">Ubicación:</label>
+                <input type="text" id="location" name="location" required>
+
+                <label for="contact">Contacto (Email o Teléfono):</label>
+                <input type="text" id="contact" name="contact" required>
+
+                <label for="price">Precio ($):</label>
+                <input type="number" id="price" name="price" step="0.01" required>
+
+                <label for="bedrooms">Habitaciones:</label>
+                <input type="number" id="bedrooms" name="bedrooms" required>
+
+                <label for="bathrooms">Baños:</label>
+                <input type="number" id="bathrooms" name="bathrooms" step="0.5" required>
+
+                <label for="description">Descripción:</label>
+                <textarea id="description" name="description"></textarea>
+
+                <label for="image_upload">Imagen:</label>
+                <input type="file" id="image_upload" accept="image/*">
+                <input type="hidden" id="image_url_unchanged" value="true">
+                <img id="image-preview" src="https://placehold.co/300x200/cccccc/FFFFFF?text=Sin+Imagen" alt="Vista previa de la imagen">
+                
+                <button type="submit">Guardar</button>
             </form>
         </div>
     </div>
@@ -115,65 +142,52 @@
         <div class="modal-content">
             <span class="close-button">&times;</span>
             <h2 id="department-title">Detalles del Departamento</h2>
-            <img id="department-image" src="https://placehold.co/300x200/cccccc/FFFFFF?text=Imagen+No+Disponible" alt="Imagen del departamento">
+            <img id="department-image" src="" alt="Imagen del departamento" class="modal-image">
             <p><strong>Ubicación:</strong> <span id="department-location"></span></p>
             <p><strong>Precio:</strong> $<span id="department-price"></span></p>
             <p><strong>Habitaciones:</strong> <span id="department-bedrooms"></span></p>
             <p><strong>Baños:</strong> <span id="department-bathrooms"></span></p>
             <p><strong>Descripción:</strong> <span id="department-description"></span></p>
-            <p><strong>Contacto:</strong> <span id="department-contact"></span></p>
-
-            <button class="contact-toggle-button">Contactar al Publicador</button>
-            <div id="contact-form-container" style="display: none;">
-                <h3>Enviar Consulta</h3>
+            
+            <button class="contact-toggle-button">Contactar Publicador</button>
+            <div id="contact-form-container" style="display:none;">
+                <h3>Enviar Mensaje al Publicador</h3>
                 <form id="contact-form">
-                    <div>
-                        <label for="inquirer-name">Tu Nombre:</label>
-                        <input type="text" id="inquirer-name" required>
-                    </div>
-                    <div>
-                        <label for="inquirer-email">Tu Email:</label>
-                        <input type="email" id="inquirer-email" required>
-                    </div>
-                    <div>
-                        <label for="inquirer-phone">Tu Teléfono (opcional):</label>
-                        <input type="tel" id="inquirer-phone">
-                    </div>
-                    <div>
-                        <label for="inquirer-message">Mensaje:</label>
-                        <textarea id="inquirer-message" rows="4" required></textarea>
-                    </div>
+                    <label for="inquirer-name">Tu Nombre:</label>
+                    <input type="text" id="inquirer-name" required>
+                    <label for="inquirer-email">Tu Email:</label>
+                    <input type="email" id="inquirer-email" required>
+                    <label for="inquirer-phone">Tu Teléfono (opcional):</label>
+                    <input type="tel" id="inquirer-phone">
+                    <label for="inquirer-message">Mensaje:</label>
+                    <textarea id="inquirer-message" rows="4" required></textarea>
                     <button type="submit">Enviar Consulta</button>
                 </form>
             </div>
+            
         </div>
     </div>
 
     <div id="modal-auth" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
-            <h2 id="auth-title">Inicia Sesión o Regístrate</h2>
+            <h2 id="auth-title">Iniciar Sesión / Registrarse</h2>
             <form id="auth-form" data-mode="register">
                 <div id="auth-name-group">
-                    <label for="auth-name">Nombre (para Registro):</label>
+                    <label for="auth-name">Nombre:</label>
                     <input type="text" id="auth-name">
                 </div>
-                <div>
-                    <label for="auth-email">Email:</label>
-                    <input type="email" id="auth-email" required>
-                </div>
+                <label for="auth-email">Email:</label>
+                <input type="email" id="auth-email" required>
+                <label for="auth-password">Contraseña:</label>
+                <input type="password" id="auth-password" required minlength="6">
+                
                 <button type="submit">Continuar</button>
-                <p class="auth-toggle-text">
-                    <a href="#" id="auth-toggle-link">¿Ya tienes una cuenta? Inicia Sesión aquí.</a>
-                </p>
+                <p class="auth-toggle"><a href="#" id="auth-toggle-link">¿Ya tienes una cuenta? Inicia Sesión aquí.</a></p>
             </form>
         </div>
     </div>
 
-    <footer>
-        <p>&copy; 2024 Buscador de Departamentos. Todos los derechos reservados.</p>
-    </footer>
-
-    <script src="script.min.js"></script>
+    <div id="toast-container"></div>
 </body>
 </html>
