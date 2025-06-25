@@ -1,18 +1,19 @@
-/* Importar fuente de Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+/* Importar fuentes de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Montserrat:wght@500;700;900&display=swap');
 
 :root {
     /* Paleta de colores */
-    --primary-color: #2c3e50; /* Azul oscuro/grisáceo para headers/footers */
-    --secondary-color: #3498db; /* Azul vibrante para botones/highlights */
-    --accent-color: #2ecc71; /* Verde para éxito */
+    --primary-color: #34495e; /* Azul grisáceo oscuro, más sofisticado */
+    --secondary-color: #1abc9c; /* Verde turquesa vibrante para highlights */
+    --accent-color: #f39c12; /* Naranja cálido para acciones secundarias/editar */
     --danger-color: #e74c3c; /* Rojo para errores/borrar */
     --light-bg: #ecf0f1; /* Fondo muy claro */
-    --dark-text: #333; /* Texto oscuro */
+    --dark-text: #2c3e50; /* Texto oscuro, casi negro */
     --light-text: #fdfdfd; /* Texto claro */
     --card-bg: #ffffff; /* Fondo de tarjetas */
-    --border-color: #dfe6e9; /* Color de borde sutil */
+    --border-color: #bdc3c7; /* Color de borde sutil */
     --shadow-light: rgba(0, 0, 0, 0.1); /* Sombra ligera */
+    --shadow-medium: rgba(0, 0, 0, 0.15); /* Sombra media */
 }
 
 /* Reset básico y estilos generales */
@@ -23,7 +24,7 @@
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Lato', sans-serif; /* Fuente para el texto de cuerpo */
     line-height: 1.6;
     color: var(--dark-text);
     background-color: var(--light-bg);
@@ -43,7 +44,7 @@ header {
     background-color: var(--primary-color);
     color: var(--light-text);
     padding: 20px 0;
-    box-shadow: 0 2px 5px var(--shadow-light);
+    box-shadow: 0 2px 8px var(--shadow-medium);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -51,7 +52,7 @@ header {
 
 .header-content {
     display: flex;
-    flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     max-width: 1200px;
@@ -60,14 +61,17 @@ header {
 }
 
 header h1 {
-    font-size: 2.2em;
-    margin-bottom: 10px; /* Espacio debajo del título en móviles */
-    width: 100%; /* Ocupa todo el ancho en móviles */
+    font-family: 'Montserrat', sans-serif; /* Nueva fuente para el título principal */
+    font-size: 2.8em;
+    font-weight: 900; /* Extra bold */
+    margin-bottom: 10px;
+    width: 100%;
     text-align: center;
+    letter-spacing: -0.5px; /* Pequeño ajuste para mejor lectura */
 }
 
 header nav {
-    width: 100%; /* Ocupa todo el ancho en móviles */
+    width: 100%;
     text-align: center;
     margin-top: 10px;
 }
@@ -76,7 +80,7 @@ header nav {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
+    gap: 12px; /* Mayor espacio entre botones */
 }
 
 /* Estilo para los botones principales del header */
@@ -84,128 +88,146 @@ header button {
     background-color: var(--secondary-color);
     color: var(--light-text);
     border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
+    padding: 10px 18px; /* Ligeramente más padding */
+    border-radius: 25px; /* Botones más redondeados (pill shape) */
     cursor: pointer;
-    font-size: 0.95em;
-    transition: background-color 0.3s ease;
-    white-space: nowrap; /* Evita que el texto del botón se rompa */
+    font-size: 1em;
+    font-weight: 700; /* Más bold */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px var(--shadow-light);
 }
 
 header button:hover {
-    background-color: #2980b9; /* Un tono más oscuro de azul */
+    background-color: #16a085; /* Un tono más oscuro de turquesa */
+    transform: translateY(-2px); /* Pequeño efecto hover */
 }
 
 /* Info del usuario logueado */
 .user-info {
     color: var(--light-text);
     text-align: center;
-    margin-top: 10px;
-    font-size: 0.9em;
+    margin-top: 15px; /* Más espacio */
+    font-size: 0.95em;
     width: 100%;
+    opacity: 0.9;
 }
 .user-info span {
-    display: block; /* Cada span en su propia línea */
+    display: block;
 }
 
 
 /* Barra de búsqueda y filtros */
 .search-filters {
-    background-color: #f8f8f8;
-    padding: 15px;
+    background-color: var(--card-bg); /* Fondo blanco para la barra de búsqueda */
+    padding: 20px; /* Más padding */
     border-bottom: 1px solid var(--border-color);
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
+    gap: 15px; /* Mayor espacio entre elementos */
     max-width: 1200px;
-    margin: 15px auto 0 auto; /* Margen superior para separarlo del header */
-    border-radius: 8px;
-    box-shadow: 0 1px 3px var(--shadow-light);
+    margin: 20px auto 0 auto; /* Más margen superior */
+    border-radius: 10px; /* Bordes más redondeados */
+    box-shadow: 0 4px 10px var(--shadow-light);
 }
 
 .search-filters input[type="text"],
 .search-filters input[type="number"],
 .search-filters select {
-    padding: 8px 12px;
+    padding: 10px 15px; /* Más padding */
     border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-size: 0.9em;
-    flex: 1 1 150px; /* Flexibilidad para los campos de filtro */
-    min-width: 120px; /* Ancho mínimo */
+    border-radius: 8px; /* Bordes redondeados */
+    font-size: 1em;
+    flex: 1 1 180px; /* Ajuste de flexibilidad */
+    min-width: 150px;
+    background-color: var(--light-bg); /* Fondo suave para inputs */
+}
+
+.search-filters input[type="text"]:focus,
+.search-filters input[type="number"]:focus,
+.search-filters select:focus {
+    border-color: var(--secondary-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(26, 188, 156, 0.3); /* Sombra al enfocar */
 }
 
 .search-filters button {
     background-color: var(--primary-color);
     color: var(--light-text);
     border: none;
-    padding: 8px 15px;
-    border-radius: 4px;
+    padding: 10px 20px; /* Más padding */
+    border-radius: 25px; /* Botones pill shape */
     cursor: pointer;
-    font-size: 0.9em;
-    transition: background-color 0.3s ease;
+    font-size: 1em;
+    font-weight: 700;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px var(--shadow-light);
 }
 
 .search-filters button:hover {
-    background-color: #1e2b38;
+    background-color: #2c3e50; /* Tono más oscuro de primary */
+    transform: translateY(-2px);
 }
 
 .search-filters label {
-    font-size: 0.9em;
+    font-size: 0.95em;
     color: var(--dark-text);
-    align-self: center; /* Alinea el label con los inputs */
-    white-space: nowrap; /* Evita que el label se rompa */
+    align-self: center;
+    white-space: nowrap;
+    font-weight: 500;
 }
 
 
 /* Contenido principal */
 main {
-    flex-grow: 1; /* Hace que el main ocupe el espacio disponible */
+    flex-grow: 1;
     max-width: 1200px;
-    margin: 20px auto;
+    margin: 30px auto; /* Más margen */
     padding: 0 15px;
 }
 
 .department-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Tarjetas un poco más anchas */
+    gap: 30px; /* Mayor espacio entre tarjetas */
     padding: 20px 0;
 }
 
 .department-card {
     background-color: var(--card-bg);
-    border-radius: 10px;
-    box-shadow: 0 4px 10px var(--shadow-light);
+    border-radius: 12px; /* Bordes más redondeados */
+    box-shadow: 0 6px 15px var(--shadow-medium); /* Sombra más pronunciada */
     overflow: hidden;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
     display: flex;
     flex-direction: column;
-    padding-bottom: 15px; /* Espacio para los botones */
 }
 
 .department-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px); /* Efecto hover más notable */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
 .department-card img {
     width: 100%;
-    height: 200px; /* Altura fija para las imágenes de las tarjetas */
+    height: 220px; /* Altura fija para las imágenes */
     object-fit: cover;
     display: block;
     border-bottom: 1px solid var(--border-color);
 }
 
 .department-card h3 {
-    font-size: 1.4em;
-    margin: 15px 15px 10px;
+    font-family: 'Montserrat', sans-serif; /* Fuente para el título de la tarjeta */
+    font-size: 1.6em;
+    margin: 20px 20px 10px; /* Más padding */
     color: var(--primary-color);
+    font-weight: 700;
 }
 
 .department-card p {
-    font-size: 0.95em;
-    margin: 0 15px 8px;
+    font-size: 1em; /* Texto un poco más grande */
+    margin: 0 20px 8px;
     color: var(--dark-text);
 }
 
@@ -213,16 +235,24 @@ main {
     color: var(--secondary-color);
 }
 
+.card-buttons {
+    display: flex;
+    justify-content: flex-end; /* Alinea los botones a la derecha */
+    gap: 10px;
+    padding: 15px 20px;
+    margin-top: auto; /* Empuja los botones al final de la tarjeta */
+}
+
 .department-card button {
     display: inline-block;
-    padding: 8px 12px;
-    margin: 5px 15px;
+    padding: 10px 15px;
     border: none;
-    border-radius: 5px;
+    border-radius: 20px; /* Botones más redondeados */
     cursor: pointer;
     font-size: 0.9em;
-    transition: background-color 0.3s ease;
-    flex-shrink: 0; /* Evita que los botones se encojan */
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 1px 3px var(--shadow-light);
 }
 
 .department-card .details-button {
@@ -231,16 +261,18 @@ main {
 }
 
 .department-card .details-button:hover {
-    background-color: #2980b9;
+    background-color: #16a085;
+    transform: translateY(-2px);
 }
 
 .department-card .edit-button {
-    background-color: #f39c12; /* Naranja para editar */
+    background-color: var(--accent-color); /* Naranja para editar */
     color: var(--light-text);
 }
 
 .department-card .edit-button:hover {
     background-color: #e67e22;
+    transform: translateY(-2px);
 }
 
 .department-card .delete-button {
@@ -250,6 +282,7 @@ main {
 
 .department-card .delete-button:hover {
     background-color: #c0392b;
+    transform: translateY(-2px);
 }
 
 /* Footer */
@@ -257,24 +290,25 @@ footer {
     background-color: var(--primary-color);
     color: var(--light-text);
     text-align: center;
-    padding: 20px 0;
-    margin-top: 30px;
-    box-shadow: 0 -2px 5px var(--shadow-light);
+    padding: 25px 0; /* Más padding */
+    margin-top: 40px; /* Más margen superior */
+    box-shadow: 0 -2px 8px var(--shadow-medium);
+    font-size: 0.95em;
 }
 
 /* Modales (publicar, detalles, autenticación) */
 .modal {
     display: none;
     position: fixed;
-    z-index: 1001; /* Más alto que el header */
+    z-index: 1001;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo más oscuro */
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s ease;
 }
 
 .modal.show {
@@ -283,15 +317,15 @@ footer {
 
 .modal-content {
     background-color: var(--card-bg);
-    margin: 5% auto; /* Ajustado para mejor centrado */
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    margin: 4% auto; /* Ajustado para mejor centrado */
+    padding: 40px; /* Más padding */
+    border-radius: 15px; /* Bordes más redondeados */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* Sombra más profunda */
     width: 90%;
-    max-width: 600px;
+    max-width: 650px; /* Ligeramente más ancho */
     position: relative;
-    transform: translateY(-20px);
-    transition: transform 0.3s ease-out;
+    transform: translateY(-30px); /* Efecto de entrada */
+    transition: transform 0.4s ease-out;
 }
 
 .modal.show .modal-content {
@@ -299,18 +333,20 @@ footer {
 }
 
 .modal-content h2 {
+    font-family: 'Montserrat', sans-serif; /* Fuente para los títulos de modal */
     color: var(--primary-color);
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     text-align: center;
-    font-size: 1.8em;
+    font-size: 2em;
+    font-weight: 700;
 }
 
 .modal-content .close-button {
     color: var(--dark-text);
     position: absolute;
-    top: 15px;
-    right: 25px;
-    font-size: 28px;
+    top: 20px;
+    right: 30px;
+    font-size: 32px; /* Tamaño de botón de cierre */
     font-weight: bold;
     cursor: pointer;
     transition: color 0.3s ease;
@@ -325,8 +361,9 @@ footer {
 .modal-content form label {
     display: block;
     margin-bottom: 8px;
-    font-weight: bold;
+    font-weight: 600; /* Más bold */
     color: var(--dark-text);
+    font-size: 0.95em;
 }
 
 .modal-content form input[type="text"],
@@ -335,34 +372,43 @@ footer {
 .modal-content form input[type="number"],
 .modal-content form input[type="file"],
 .modal-content form textarea {
-    width: calc(100% - 20px); /* Ajuste para padding */
-    padding: 10px;
-    margin-bottom: 15px;
+    width: 100%;
+    padding: 12px; /* Más padding */
+    margin-bottom: 18px; /* Más margen */
     border: 1px solid var(--border-color);
-    border-radius: 5px;
+    border-radius: 8px; /* Más redondeado */
     font-size: 1em;
-    display: block; /* Asegura que ocupen todo el ancho */
+    background-color: var(--light-bg);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modal-content form input:focus,
+.modal-content form textarea:focus {
+    border-color: var(--secondary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.4);
 }
 
 .modal-content form textarea {
     resize: vertical;
-    min-height: 80px;
+    min-height: 100px; /* Mayor altura mínima */
 }
 
 .modal-content form input[type="file"] {
-    padding: 5px; /* Menos padding para el input file */
+    padding: 8px;
+    background-color: transparent; /* Fondo transparente */
 }
 
 .modal-content form img#image-preview,
 .modal-content .modal-image {
     max-width: 100%;
     height: auto;
-    max-height: 250px; /* Altura máxima para imágenes grandes en modal */
-    object-fit: contain; /* Contiene la imagen sin recortar */
+    max-height: 300px; /* Mayor altura máxima */
+    object-fit: contain;
     display: block;
-    margin: 15px auto;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px var(--shadow-light);
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px var(--shadow-medium);
 }
 
 .modal-content form button[type="submit"],
@@ -370,30 +416,34 @@ footer {
     background-color: var(--secondary-color);
     color: var(--light-text);
     border: none;
-    padding: 12px 20px;
-    border-radius: 5px;
+    padding: 15px 25px; /* Más padding */
+    border-radius: 25px; /* Botones pill shape */
     cursor: pointer;
-    font-size: 1.1em;
-    transition: background-color 0.3s ease;
+    font-size: 1.15em;
+    font-weight: 700;
+    transition: background-color 0.3s ease, transform 0.2s ease;
     display: block;
     width: 100%;
-    margin-top: 20px;
+    margin-top: 25px;
+    box-shadow: 0 3px 6px var(--shadow-light);
 }
 
 .modal-content form button[type="submit"]:hover,
 .modal-content .contact-toggle-button:hover {
-    background-color: #2980b9;
+    background-color: #16a085;
+    transform: translateY(-2px);
 }
 
 .modal-content .auth-toggle {
     text-align: center;
-    margin-top: 15px;
-    font-size: 0.9em;
+    margin-top: 20px;
+    font-size: 0.95em;
 }
 
 .modal-content .auth-toggle a {
     color: var(--secondary-color);
     text-decoration: none;
+    font-weight: 600;
 }
 
 .modal-content .auth-toggle a:hover {
@@ -404,49 +454,54 @@ footer {
 #contact-form-container {
     background-color: #f9f9f9;
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 20px;
-    margin-top: 20px;
+    border-radius: 10px;
+    padding: 25px;
+    margin-top: 25px;
+    box-shadow: inset 0 1px 3px var(--shadow-light);
 }
 #contact-form-container h3 {
+    font-family: 'Montserrat', sans-serif;
     color: var(--primary-color);
-    margin-bottom: 15px;
-    font-size: 1.5em;
+    margin-bottom: 20px;
+    font-size: 1.7em;
+    font-weight: 600;
 }
 #contact-form-container button[type="submit"] {
-    background-color: var(--accent-color);
+    background-color: var(--accent-color); /* Naranja para enviar mensaje */
 }
 #contact-form-container button[type="submit"]:hover {
-    background-color: #27ae60;
+    background-color: #e67e22;
 }
 
 
 /* Toast Notifications */
 #toast-container {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 25px;
+    right: 25px;
     z-index: 1002;
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    flex-direction: column-reverse; /* Las nuevas aparecen abajo */
+    gap: 12px;
 }
 
 .toast {
     background-color: #333;
     color: var(--light-text);
-    padding: 12px 20px;
-    border-radius: 5px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 14px 22px; /* Más padding */
+    border-radius: 8px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
     opacity: 0;
     transform: translateX(100%);
-    animation: slideIn 0.5s forwards, fadeOut 0.5s 2.5s forwards;
-    min-width: 250px;
-    font-size: 0.95em;
+    animation: slideIn 0.5s forwards, fadeOut 0.5s 3.5s forwards; /* Más tiempo visible */
+    min-width: 280px;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer; /* Para que el usuario pueda cerrarlo */
 }
 
 .toast.success {
-    background-color: var(--accent-color);
+    background-color: var(--secondary-color); /* Usar verde turquesa para éxito */
 }
 
 .toast.error {
@@ -454,7 +509,7 @@ footer {
 }
 
 .toast.info {
-    background-color: var(--secondary-color);
+    background-color: var(--primary-color); /* Usar primary para info */
 }
 
 @keyframes slideIn {
@@ -476,29 +531,31 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
-    margin-top: 30px;
-    padding: 10px;
+    gap: 12px; /* Mayor espacio */
+    margin-top: 40px; /* Más margen superior */
+    padding: 15px; /* Más padding */
     background-color: var(--card-bg);
-    border-radius: 8px;
-    box-shadow: 0 2px 8px var(--shadow-light);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px var(--shadow-light);
 }
 
 .pagination-button {
     background-color: var(--light-bg);
     color: var(--dark-text);
     border: 1px solid var(--border-color);
-    padding: 8px 15px;
-    border-radius: 5px;
+    padding: 10px 18px; /* Más padding */
+    border-radius: 20px; /* Más redondeado */
     cursor: pointer;
     font-size: 1em;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+    font-weight: 600;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
 }
 
 .pagination-button:hover:not(:disabled) {
     background-color: var(--secondary-color);
     color: var(--light-text);
     border-color: var(--secondary-color);
+    transform: translateY(-2px);
 }
 
 .pagination-button.active {
@@ -506,18 +563,20 @@ footer {
     color: var(--light-text);
     border-color: var(--secondary-color);
     font-weight: bold;
+    box-shadow: 0 1px 4px rgba(26, 188, 156, 0.4);
 }
 
 .pagination-button:disabled {
-    opacity: 0.6;
+    opacity: 0.5; /* Más opaco cuando deshabilitado */
     cursor: not-allowed;
 }
 
 /* Estilo para el texto resaltado en la búsqueda */
 .highlight {
-    background-color: yellow;
-    padding: 2px 0;
-    border-radius: 3px;
+    background-color: #ffeaa7; /* Amarillo más suave */
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-weight: 700;
 }
 
 /* Media Queries para Responsividad */
@@ -526,6 +585,7 @@ footer {
         width: auto;
         margin-bottom: 0;
         text-align: left;
+        font-size: 3.2em; /* Título más grande en desktop */
     }
 
     header nav {
@@ -538,55 +598,65 @@ footer {
         margin-top: 0;
     }
     .user-info span {
-        display: inline-block; /* En línea en escritorio */
-        margin-left: 10px; /* Espacio entre nombre y email */
+        display: inline-block;
+        margin-left: 15px;
     }
 
     .search-filters {
-        justify-content: flex-start; /* Alinea a la izquierda en desktop */
+        justify-content: flex-start;
     }
 }
 
 @media (max-width: 600px) {
     .modal-content {
-        margin: 2% auto; /* Más cerca de la parte superior en móviles */
-        padding: 20px;
+        margin: 2% auto;
+        padding: 25px;
+    }
+    .department-card h3 {
+        font-size: 1.4em;
+    }
+    .department-card p {
+        font-size: 0.9em;
+    }
+    .department-card button {
+        padding: 8px 12px;
+        font-size: 0.85em;
+    }
+    .card-buttons {
+        padding: 10px 15px;
     }
 }
 
 @media (max-width: 480px) {
     header h1 {
-        font-size: 1.8em;
+        font-size: 2.2em;
     }
     header button {
-        padding: 8px 12px;
-        font-size: 0.85em;
+        padding: 8px 15px;
+        font-size: 0.9em;
     }
     .search-filters input,
     .search-filters select,
     .search-filters button {
-        font-size: 0.85em;
-        padding: 6px 10px;
-    }
-    .department-card h3 {
-        font-size: 1.2em;
-    }
-    .department-card p {
-        font-size: 0.85em;
-    }
-    .department-card button {
-        padding: 6px 10px;
-        font-size: 0.8em;
+        font-size: 0.9em;
+        padding: 8px 12px;
     }
     .toast {
         min-width: unset;
-        width: calc(100% - 40px);
-        left: 20px;
-        right: 20px;
-        bottom: 10px;
+        width: calc(100% - 30px);
+        left: 15px;
+        right: 15px;
+        bottom: 15px;
+        padding: 12px 18px;
     }
     .pagination-button {
-        padding: 6px 12px;
+        padding: 8px 15px;
         font-size: 0.9em;
+    }
+    .modal-content {
+        padding: 20px;
+    }
+    .modal-content h2 {
+        font-size: 1.8em;
     }
 }
