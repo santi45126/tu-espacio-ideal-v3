@@ -51,6 +51,7 @@
                         <option value="bedrooms-desc">Habitaciones (mayor a menor)</option>
                     </select>
                 </div>
+
                 <button id="search-button">Buscar</button>
                 <button id="clear-search-button">Limpiar</button>
             </div>
@@ -123,8 +124,32 @@
             <p><strong>Baños:</strong> <span id="department-bathrooms"></span></p>
             <p><strong>Descripción:</strong> <span id="department-description"></span></p>
             <p><strong>Contacto:</strong> <span id="department-contact"></span></p>
-            <button class="reserve-button">¡Reservar ahora!</button>
-        </div>
+            
+            <button class="contact-toggle-button">¡Contactar ahora!</button>
+            
+            <div id="contact-form-container" style="display:none;">
+                <h3>Enviar Consulta</h3>
+                <form id="contact-form">
+                    <div>
+                        <label for="inquirer-name">Tu Nombre:</label>
+                        <input type="text" id="inquirer-name" name="inquirer-name" required>
+                    </div>
+                    <div>
+                        <label for="inquirer-email">Tu Email:</label>
+                        <input type="email" id="inquirer-email" name="inquirer-email" required>
+                    </div>
+                    <div>
+                        <label for="inquirer-phone">Tu Teléfono (opcional):</label>
+                        <input type="tel" id="inquirer-phone" name="inquirer-phone">
+                    </div>
+                    <div>
+                        <label for="inquirer-message">Tu Mensaje:</label>
+                        <textarea id="inquirer-message" name="inquirer-message" rows="4" required>Hola, estoy interesado/a en este departamento. Me gustaría obtener más información o coordinar una visita.</textarea>
+                    </div>
+                    <button type="submit">Enviar Consulta</button>
+                </form>
+            </div>
+            </div>
     </div>
 </body>
 </html>
