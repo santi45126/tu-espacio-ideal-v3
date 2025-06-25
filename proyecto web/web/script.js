@@ -1,19 +1,17 @@
-// URLs de la API (asegúrate de que estas sean las correctas)
-const API_BASE_URL = 'https://667b2184bd04576b61ee483c.mockapi.io';
-const API_ENDPOINT = '/departments';
+// ** Importante: Asegúrate de que las instancias de Firebase (db, auth, storage, collection, etc.)
+//     estén disponibles globalmente, como lo definimos en el <script type="module"> en tu index.html. **
 
-// Elementos del DOM
+// NO SE USA MAS const API_URL_COLLECTION = 'https://685c5401769de2bf085c6ec6.mockapi.io/departamentos'; // ¡Esta línea ya no es necesaria!
+
 const departmentGrid = document.querySelector('.department-grid');
 const searchInput = document.getElementById('search-input');
 const searchButton = document.getElementById('search-button');
 const clearSearchButton = document.getElementById('clear-search-button');
 const publishButton = document.getElementById('publish-button');
-
-// Nuevos elementos para los filtros
 const minBedroomsSelect = document.getElementById('min-bedrooms');
 const minPriceInput = document.getElementById('min-price');
 const maxPriceInput = document.getElementById('max-price');
-
+const sortBySelect = document.getElementById('sort-by');
 const modalPublish = document.getElementById('modal-publish');
 const modalDetails = document.getElementById('modal-details');
 const closeButtons = document.querySelectorAll('.close-button');
@@ -21,210 +19,280 @@ const publishForm = document.getElementById('publish-form');
 const modalPublishTitle = document.getElementById('modal-publish-title');
 const imageUpload = document.getElementById('image_upload');
 const imagePreview = document.getElementById('image-preview');
-const imageUrlUnchanged = document.getElementById('image_url_unchanged');
+const imageUrlUnchanged = document.getElementById('image-url-unchanged');
+const contactToggleButton = document.querySelector('.contact-toggle-button');
+const contactFormContainer = document.getElementById('contact-form-container');
+const contactForm = document.getElementById('contact-form');
+const paginationControls = document.getElementById('pagination-controls');
+const userActionButton = document.getElementById('user-action-button');
+const modalAuth = document.getElementById('modal-auth');
+const authForm = document.getElementById('auth-form');
+const authToggleLink = document.getElementById('auth-toggle-link');
+const authTitle = document.getElementById('auth-title');
+const authNameGroup = document.getElementById('auth-name-group');
+const logoutButton = document.getElementById('logout-button');
+const userNameDisplay = document.getElementById('user-name-display');
+const userEmailDisplay = document.getElementById('user-email-display');
 
-let allDepartments = []; // Almacenar todos los departamentos cargados
-let editingDepartmentId = null; // Para saber si estamos editando o publicando uno nuevo
+let currentPage = 1;
+const itemsPerPage = 6;
+let totalDepartmentsCount = 0;
+let allDepartments = [];
+let editingDepartmentId = null;
+let currentSearchTerm = '';
+let currentUser = null;
 
 // --- Funciones de Utilidad ---
-
-// Mostrar notificaciones Toast
 function showToast(message, type = 'success') {
     const toastContainer = document.getElementById('toast-container');
     const toast = document.createElement('div');
     toast.classList.add('toast', type);
     toast.textContent = message;
     toastContainer.appendChild(toast);
-
-    // Eliminar el toast después de unos segundos
     setTimeout(() => {
         toast.remove();
     }, 3000);
 }
 
-// Cargar imagen de vista previa
 imageUpload.addEventListener('change', function() {
     const file = this.files[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
             imagePreview.src = e.target.result;
-            imageUrlUnchanged.value = 'false'; // Indica que la imagen ha cambiado
+            imageUrlUnchanged.value = 'false';
         };
         reader.readAsDataURL(file);
     } else {
         imagePreview.src = 'https://placehold.co/300x200/cccccc/FFFFFF?text=Sin+Imagen';
-        imageUrlUnchanged.value = 'true'; // Indica que la imagen no ha cambiado
+        imageUrlUnchanged.value = 'true';
     }
 });
 
-
-// --- Funciones para Modales ---
-
-function openModal(modal) {
-    modal.style.display = 'block';
-    setTimeout(() => modal.classList.add('show'), 10); // Añadir clase 'show' para la transición
+function openModal(modalElement) {
+    modalElement.style.display = 'block';
+    setTimeout(() => modalElement.classList.add('show'), 10);
 }
 
-function closeModal(modal) {
-    modal.classList.remove('show'); // Quitar clase 'show' para la transición
-    setTimeout(() => modal.style.display = 'none', 300); // Esconder después de la transición
+function closeModal(modalElement) {
+    modalElement.classList.remove('show');
+    setTimeout(() => modalElement.style.display = 'none', 300);
+    if (modalElement === modalDetails) {
+        contactFormContainer.style.display = 'none';
+        contactForm.reset();
+    }
 }
 
 closeButtons.forEach(button => {
     button.addEventListener('click', () => {
         closeModal(modalPublish);
         closeModal(modalDetails);
+        closeModal(modalAuth);
     });
 });
 
-window.addEventListener('click', (event) => {
-    if (event.target === modalPublish) {
+window.addEventListener('click', e => {
+    if (e.target === modalPublish) {
         closeModal(modalPublish);
     }
-    if (event.target === modalDetails) {
+    if (e.target === modalDetails) {
         closeModal(modalDetails);
+    }
+    if (e.target === modalAuth) {
+        closeModal(modalAuth);
     }
 });
 
+// --- Funciones de Firebase Firestore (Base de Datos) ---
 
-// --- Funciones CRUD (Create, Read, Update, Delete) ---
-
-// READ: Cargar y mostrar departamentos
-async function loadDepartments() {
+/**
+ * Carga los departamentos desde Firestore.
+ * @param {number} page Página actual a cargar.
+ * @param {boolean} userOnly Si es true, filtra por departamentos del usuario actual.
+ */
+async function loadDepartments(page = 1, userOnly = false) {
+    currentPage = page;
     try {
-        const response = await fetch(`${API_BASE_URL}${API_ENDPOINT}`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        const departmentsRef = window.collection(window.db, 'departamentos');
+        let q;
+
+        if (userOnly && currentUser && currentUser.uid) {
+            q = window.query(departmentsRef, window.where('userId', '==', currentUser.uid));
+        } else {
+            q = departmentsRef;
         }
-        allDepartments = await response.json();
-        displayDepartments(allDepartments);
-    } catch (error) {
-        console.error("Error al cargar los departamentos:", error);
-        showToast('Error al cargar departamentos.', 'error');
+
+        const querySnapshot = await window.getDocs(q);
+        const fetchedDepartments = [];
+        querySnapshot.forEach((doc) => {
+            fetchedDepartments.push({ id: doc.id, ...doc.data() });
+        });
+
+        totalDepartmentsCount = fetchedDepartments.length;
+        allDepartments = fetchedDepartments;
+
+        filterAndSortDepartments(userOnly);
+
+    } catch (e) {
+        console.error('Error al cargar los departamentos desde Firebase:', e);
+        showToast('Error al cargar departamentos. Intente de nuevo más tarde.', 'error');
     }
 }
 
-// Mostrar departamentos en el DOM (ahora llama a filterDepartments)
-function displayDepartments(departments) {
-    departmentGrid.innerHTML = ''; // Limpiar el grid antes de mostrar
-    if (departments.length === 0) {
-        departmentGrid.innerHTML = '<p>No se encontraron departamentos que coincidan con la búsqueda.</p>';
-        return;
-    }
-    departments.forEach(department => {
-        const departmentCard = document.createElement('div');
-        departmentCard.classList.add('department-card');
-        departmentCard.innerHTML = `
-            <img src="${department.image_url || 'https://placehold.co/300x200/cccccc/FFFFFF?text=Imagen+No+Disponible'}" alt="Imagen del departamento en ${department.location || 'Chimbas'}" onerror="this.onerror=null;this.src='https://placehold.co/300x200/cccccc/FFFFFF?text=Error+al+cargar+imagen';" loading="lazy">
-            <h3>${department.title || 'Departamento sin título'}</h3>
-            <p><strong>Ubicación:</strong> ${department.location || 'Desconocida'}</p>
-            <p><strong>Precio:</strong> $${(department.price || 0).toLocaleString('es-AR')}</p>
-            <p><strong>Habitaciones:</strong> ${department.bedrooms || 'N/A'}</p>
-            <p><strong>Baños:</strong> ${department.bathrooms || 'N/A'}</p>
-            <button class="details-button" data-id="${department.id}">Ver Detalles</button>
-            <button class="edit-button" data-id="${department.id}">Editar</button>
-            <button class="delete-button" data-id="${department.id}">Eliminar</button>
-        `;
-        departmentGrid.appendChild(departmentCard);
-    });
+function highlightText(text, term) {
+    if (!term || text === null || text === undefined) return text;
+    const regex = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    return text.replace(regex, '<span class="highlight">$1</span>');
+}
 
-    // AñadirEventListeners a los botones de la tarjeta
+function displayDepartments(departmentsToDisplay) {
+    departmentGrid.innerHTML = '';
+    if (departmentsToDisplay.length === 0) {
+        departmentGrid.innerHTML = '<p>No se encontraron departamentos que coincidan con la búsqueda.</p>';
+    }
+    departmentsToDisplay.forEach(dep => {
+        const card = document.createElement('div');
+        card.classList.add('department-card');
+        const highlightedTitle = highlightText(dep.title, currentSearchTerm);
+        const highlightedLocation = highlightText(dep.location, currentSearchTerm);
+        const highlightedDescription = highlightText(dep.description, currentSearchTerm);
+        card.innerHTML = `
+            <img src="${dep.image_url || 'https://placehold.co/300x200/cccccc/FFFFFF?text=Imagen+No+Disponible'}" alt="Imagen del departamento en ${dep.location || 'Desconocida'}" onerror="this.onerror=null;this.src='https://placehold.co/300x200/cccccc/FFFFFF?text=Error+al+cargar+imagen';" loading="lazy">
+            <h3>${highlightedTitle || 'Departamento sin título'}</h3>
+            <p><strong>Ubicación:</strong> ${highlightedLocation || 'Desconocida'}</p>
+            <p><strong>Precio:</strong> $${(dep.price || 0).toLocaleString('es-AR')}</p>
+            <p><strong>Habitaciones:</strong> ${dep.bedrooms || 'N/A'}</p>
+            <p><strong>Baños:</strong> ${dep.bathrooms || 'N/A'}</p>
+            <p><strong>Descripción:</strong> ${highlightedDescription || 'Sin descripción.'}</p>
+            <button class="details-button" data-id="${dep.id}">Ver Detalles</button>
+            ${currentUser && dep.userId === currentUser.uid ?
+                `<button class="edit-button" data-id="${dep.id}">Editar</button>
+                 <button class="delete-button" data-id="${dep.id}">Eliminar</button>` : ''}
+        `;
+        departmentGrid.appendChild(card);
+    });
     document.querySelectorAll('.details-button').forEach(button => {
-        button.addEventListener('click', (e) => showDepartmentDetails(e.target.dataset.id));
+        button.addEventListener('click', e => showDepartmentDetails(e.target.dataset.id));
     });
     document.querySelectorAll('.edit-button').forEach(button => {
-        button.addEventListener('click', (e) => editDepartment(e.target.dataset.id));
+        button.addEventListener('click', e => editDepartment(e.target.dataset.id));
     });
     document.querySelectorAll('.delete-button').forEach(button => {
-        button.addEventListener('click', (e) => deleteDepartment(e.target.dataset.id));
+        button.addEventListener('click', e => deleteDepartment(e.target.dataset.id));
     });
+
+    renderPaginationControls();
 }
 
-// Función para mostrar los detalles del departamento en un modal
 function showDepartmentDetails(id) {
     const department = allDepartments.find(dep => dep.id === id);
     if (department) {
         document.getElementById('department-title').textContent = department.title || 'Detalles del Departamento';
         document.getElementById('department-image').src = department.image_url || 'https://placehold.co/300x200/cccccc/FFFFFF?text=Imagen+No+Disponible';
-        document.getElementById('department-image').alt = `Imagen del departamento en ${department.location || 'Chimbas'}`; // Alt text para el modal
+        document.getElementById('department-image').alt = `Imagen del departamento en ${department.location || 'Desconocida'}`;
         document.getElementById('department-location').textContent = department.location || 'Desconocida';
         document.getElementById('department-price').textContent = (department.price || 0).toLocaleString('es-AR');
         document.getElementById('department-bedrooms').textContent = department.bedrooms || 'N/A';
         document.getElementById('department-bathrooms').textContent = department.bathrooms || 'N/A';
         document.getElementById('department-description').textContent = department.description || 'Sin descripción.';
-        document.getElementById('department-contact').textContent = department.contact || 'No especificado.';
+        contactFormContainer.style.display = 'none';
+        contactForm.reset();
         openModal(modalDetails);
     }
 }
 
-
-// CREATE/UPDATE: Publicar o Editar departamento
 publishButton.addEventListener('click', () => {
+    if (!currentUser) {
+        showToast('Necesitas iniciar sesión para publicar un departamento.', 'info');
+        openModal(modalAuth);
+        authTitle.textContent = 'Inicia Sesión o Regístrate para Publicar';
+        authNameGroup.style.display = 'none';
+        authForm.dataset.mode = 'login';
+        authToggleLink.textContent = '¿No tienes una cuenta? Regístrate aquí.';
+        return;
+    }
     modalPublishTitle.textContent = 'Publicar Nuevo Departamento';
-    publishForm.reset(); // Limpiar formulario
-    imagePreview.src = 'https://placehold.co/300x200/cccccc/FFFFFF?text=Sin+Imagen'; // Restablecer vista previa
-    imageUrlUnchanged.value = 'true'; // Resetear estado de imagen
-    editingDepartmentId = null; // No estamos editando
+    publishForm.reset();
+    imagePreview.src = 'https://placehold.co/300x200/cccccc/FFFFFF?text=Sin+Imagen';
+    imageUrlUnchanged.value = 'true';
+    editingDepartmentId = null;
     openModal(modalPublish);
 });
 
-async function saveDepartment(departmentData) {
-    let url = `${API_BASE_URL}${API_ENDPOINT}`;
-    let method = 'POST';
-
-    if (editingDepartmentId) {
-        url += `/${editingDepartmentId}`;
-        method = 'PUT';
+/**
+ * Guarda o actualiza un departamento en Firestore, incluyendo la subida de imagen a Storage.
+ * @param {object} departmentData Datos del departamento.
+ * @param {File | null} imageFile Archivo de imagen a subir, o null si no hay nuevo archivo.
+ */
+async function saveDepartment(departmentData, imageFile) {
+    if (!currentUser) {
+        showToast('Debes iniciar sesión para publicar/editar un departamento.', 'error');
+        return;
     }
 
-    try {
-        const response = await fetch(url, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(departmentData)
-        });
+    departmentData.userId = currentUser.uid;
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+    try {
+        if (imageFile) {
+            const storageRef = window.ref(window.storage, `images/departments/${Date.now()}_${imageFile.name}`);
+            const uploadTask = await window.uploadBytes(storageRef, imageFile);
+            departmentData.image_url = await window.getDownloadURL(uploadTask.ref);
+        } else if (editingDepartmentId && imageUrlUnchanged.value === 'true') {
+            const existingDepartment = allDepartments.find(dep => dep.id === editingDepartmentId);
+            departmentData.image_url = existingDepartment ? existingDepartment.image_url : null;
+        } else {
+            departmentData.image_url = null;
         }
 
-        const result = await response.json();
-        showToast(editingDepartmentId ? 'Departamento actualizado con éxito.' : 'Departamento publicado con éxito.');
+        if (editingDepartmentId) {
+            const depRef = window.doc(window.db, 'departamentos', editingDepartmentId);
+            await window.updateDoc(depRef, departmentData);
+            showToast('Departamento actualizado con éxito.');
+        } else {
+            await window.addDoc(window.collection(window.db, 'departamentos'), departmentData);
+            showToast('Departamento publicado con éxito.');
+        }
         closeModal(modalPublish);
-        loadDepartments(); // Recargar la lista
-    } catch (error) {
-        console.error("Error al guardar el departamento:", error);
-        showToast('Error al guardar el departamento.', 'error');
+        loadDepartments(currentPage, userActionButton.dataset.view === 'my-listings');
+    } catch (e) {
+        console.error('Error al guardar el departamento en Firebase:', e);
+        showToast('Error al guardar el departamento. Intente de nuevo.', 'error');
     }
 }
 
-// DELETE: Eliminar departamento
 async function deleteDepartment(id) {
     if (!confirm('¿Estás seguro de que quieres eliminar este departamento?')) {
         return;
     }
+    if (!currentUser) {
+        showToast('Necesitas iniciar sesión para eliminar departamentos.', 'error');
+        return;
+    }
+
     try {
-        const response = await fetch(`${API_BASE_URL}${API_ENDPOINT}/${id}`, {
-            method: 'DELETE'
-        });
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        const departmentRef = window.doc(window.db, 'departamentos', id);
+        const departmentToDelete = allDepartments.find(dep => dep.id === id);
+        if (departmentToDelete && departmentToDelete.userId !== currentUser.uid) {
+            showToast('No tienes permiso para eliminar este departamento.', 'error');
+            return;
         }
+
+        await window.deleteDoc(departmentRef);
         showToast('Departamento eliminado con éxito.', 'info');
-        loadDepartments(); // Recargar la lista
-    } catch (error) {
-        console.error("Error al eliminar el departamento:", error);
-        showToast('Error al eliminar el departamento.', 'error');
+        loadDepartments(currentPage, userActionButton.dataset.view === 'my-listings');
+    } catch (e) {
+        console.error('Error al eliminar el departamento de Firebase:', e);
+        showToast('Error al eliminar el departamento.','error');
     }
 }
 
-// EDIT: Cargar datos para edición
 async function editDepartment(id) {
     const department = allDepartments.find(dep => dep.id === id);
     if (department) {
+        if (!currentUser || department.userId !== currentUser.uid) {
+            showToast('No tienes permiso para editar este departamento.', 'error');
+            return;
+        }
         modalPublishTitle.textContent = 'Editar Departamento';
         document.getElementById('title').value = department.title || '';
         document.getElementById('location').value = department.location || '';
@@ -234,67 +302,96 @@ async function editDepartment(id) {
         document.getElementById('bathrooms').value = department.bathrooms || '';
         document.getElementById('description').value = department.description || '';
         imagePreview.src = department.image_url || 'https://placehold.co/300x200/cccccc/FFFFFF?text=Sin+Imagen';
-        imageUrlUnchanged.value = 'true'; // Al editar, asumimos que la imagen no ha cambiado hasta que el usuario suba una nueva
-        
+        imageUrlUnchanged.value = 'true';
         editingDepartmentId = id;
         openModal(modalPublish);
     }
 }
 
-// --- Lógica de Filtros y Búsqueda ---
+// --- Lógica de Filtrado y Ordenamiento (se aplica sobre los datos cargados) ---
+function filterAndSortDepartments(userOnly = false) {
+    currentSearchTerm = searchInput.value.toLowerCase().trim();
+    const searchTerm = currentSearchTerm;
+    const minBedrooms = parseInt(minBedroomsSelect.value);
+    const minPrice = parseFloat(minPriceInput.value);
+    const maxPrice = parseFloat(maxPriceInput.value);
 
-// Función principal para filtrar departamentos
-function filterDepartments() {
-    const searchTerm = searchInput.value.toLowerCase().trim();
-    const minBedrooms = parseInt(minBedroomsSelect.value); // Obtener valor del selector de habitaciones
-    const minPrice = parseFloat(minPriceInput.value); // Obtener valor del input de precio mínimo
-    const maxPrice = parseFloat(maxPriceInput.value); // Obtener valor del input de precio máximo
+    let filteredDepartments = allDepartments.filter(dep => {
+        const isMatch = searchTerm === '' ||
+                                (dep.title && dep.title.toLowerCase().includes(searchTerm)) ||
+                                (dep.location && dep.location.toLowerCase().includes(searchTerm)) ||
+                                (dep.description && dep.description.toLowerCase().includes(searchTerm));
+        const hasMinBedrooms = minBedrooms === 0 || (dep.bedrooms && dep.bedrooms >= minBedrooms);
+        const priceMin = isNaN(minPrice) || (dep.price && dep.price >= minPrice);
+        const priceMax = isNaN(maxPrice) || (dep.price && dep.price <= maxPrice);
 
-    const filtered = allDepartments.filter(department => {
-        const matchesSearch = searchTerm === '' ||
-            (department.title && department.title.toLowerCase().includes(searchTerm)) ||
-            (department.location && department.location.toLowerCase().includes(searchTerm)) ||
-            (department.description && department.description.toLowerCase().includes(searchTerm));
+        const isUserListing = userOnly ? (dep.userId === (currentUser ? currentUser.uid : null)) : true;
 
-        // Filtrado por habitaciones (si el departamento tiene menos habitaciones que el mínimo seleccionado, se filtra)
-        const matchesBedrooms = minBedrooms === 0 || (department.bedrooms && department.bedrooms >= minBedrooms);
-
-        // Filtrado por precio mínimo
-        const matchesMinPrice = isNaN(minPrice) || (department.price && department.price >= minPrice);
-
-        // Filtrado por precio máximo
-        const matchesMaxPrice = isNaN(maxPrice) || (department.price && department.price <= maxPrice);
-
-        return matchesSearch && matchesBedrooms && matchesMinPrice && matchesMaxPrice;
+        return isMatch && hasMinBedrooms && priceMin && priceMax && isUserListing;
     });
 
-    displayDepartments(filtered);
+    const sortBy = sortBySelect.value;
+    if (sortBy !== 'none') {
+        filteredDepartments.sort((a, b) => {
+            let valA, valB;
+            if (sortBy.includes('price')) {
+                valA = a.price || 0;
+                valB = b.price || 0;
+            } else if (sortBy.includes('bedrooms')) {
+                valA = a.bedrooms || 0;
+                valB = b.bedrooms || 0;
+            }
+            if (sortBy.endsWith('asc')) {
+                return valA - valB;
+            } else {
+                return valB - valA;
+            }
+        });
+    }
+
+    displayDepartments(filteredDepartments);
 }
 
-// Event Listeners para la búsqueda y los filtros
-searchButton.addEventListener('click', filterDepartments);
-searchInput.addEventListener('keyup', (event) => {
-    if (event.key === 'Enter') {
-        filterDepartments();
+// --- Event Listeners para Filtros y Búsqueda ---
+searchButton.addEventListener('click', () => {
+    currentPage = 1;
+    loadDepartments(currentPage, userActionButton.dataset.view === 'my-listings');
+});
+searchInput.addEventListener('keyup', e => {
+    if ('Enter' === e.key) {
+        currentPage = 1;
+        loadDepartments(currentPage, userActionButton.dataset.view === 'my-listings');
     }
 });
-
-// Añadidos Event Listeners para los nuevos filtros
-minBedroomsSelect.addEventListener('change', filterDepartments);
-minPriceInput.addEventListener('input', filterDepartments); // Usar 'input' para filtrar mientras el usuario escribe
-maxPriceInput.addEventListener('input', filterDepartments); // Usar 'input' para filtrar mientras el usuario escribe
-
+minBedroomsSelect.addEventListener('change', () => {
+    currentPage = 1;
+    loadDepartments(currentPage, userActionButton.dataset.view === 'my-listings');
+});
+minPriceInput.addEventListener('input', () => {
+    currentPage = 1;
+    loadDepartments(currentPage, userActionButton.dataset.view === 'my-listings');
+});
+maxPriceInput.addEventListener('input', () => {
+    currentPage = 1;
+    loadDepartments(currentPage, userActionButton.dataset.view === 'my-listings');
+});
+sortBySelect.addEventListener('change', () => {
+    filterAndSortDepartments(userActionButton.dataset.view === 'my-listings');
+});
 
 clearSearchButton.addEventListener('click', () => {
     searchInput.value = '';
-    minBedroomsSelect.value = '0'; // Resetear selector de habitaciones
-    minPriceInput.value = ''; // Resetear precio mínimo
-    maxPriceInput.value = ''; // Resetear precio máximo
-    filterDepartments(); // Volver a mostrar todos los departamentos
+    minBedroomsSelect.value = '0';
+    minPriceInput.value = '';
+    maxPriceInput.value = '';
+    sortBySelect.value = 'none';
+    currentSearchTerm = '';
+    currentPage = 1;
+    loadDepartments(currentPage, userActionButton.dataset.view === 'my-listings');
 });
 
-// Manejo del envío del formulario de publicación
-publishForm.addEventListener('submit', async (e) => {
+// --- Manejo del Formulario de Publicación ---
+publishForm.addEventListener('submit', async e => {
     e.preventDefault();
     const formData = new FormData(publishForm);
     const departmentData = {
@@ -304,26 +401,225 @@ publishForm.addEventListener('submit', async (e) => {
         price: parseFloat(formData.get('price')),
         bedrooms: parseInt(formData.get('bedrooms')),
         bathrooms: parseFloat(formData.get('bathrooms')),
-        description: formData.get('description')
+        description: formData.get('description'),
+        createdAt: new Date()
     };
 
-    // Manejo de la imagen: solo subir si ha cambiado
-    if (imageUpload.files.length > 0 && imageUrlUnchanged.value === 'false') {
-        // En un entorno real, aquí enviarías la imagen a un servicio de almacenamiento (Cloudinary, S3, etc.)
-        // MockAPI no soporta subida de archivos directamente, así que simularemos la URL.
-        // En una app real, la URL de la imagen se obtendría del servicio de almacenamiento.
-        departmentData.image_url = 'https://picsum.photos/400/300?' + Math.random(); // URL de imagen de ejemplo
-    } else if (editingDepartmentId && imageUrlUnchanged.value === 'true') {
-        // Si estamos editando y no se subió una nueva imagen, mantener la URL existente
-        const existingDepartment = allDepartments.find(dep => dep.id === editingDepartmentId);
-        departmentData.image_url = existingDepartment ? existingDepartment.image_url : null;
-    } else {
-        // Si no hay imagen y no estamos editando o se borró la imagen
-        departmentData.image_url = null;
-    }
+    // Validaciones
+    if (!departmentData.title || departmentData.title.trim() === '') { showToast('El título es obligatorio.', 'error'); return; }
+    if (!departmentData.location || departmentData.location.trim() === '') { showToast('La ubicación es obligatoria.', 'error'); return; }
+    if (!departmentData.contact || departmentData.contact.trim() === '') { showToast('El contacto es obligatorio.', 'error'); return; }
+    if (isNaN(departmentData.price) || departmentData.price <= 0) { showToast('El precio debe ser un número positivo.', 'error'); return; }
+    if (isNaN(departmentData.bedrooms) || departmentData.bedrooms <= 0 || !Number.isInteger(departmentData.bedrooms)) { showToast('Las habitaciones deben ser un número entero positivo.', 'error'); return; }
+    if (isNaN(departmentData.bathrooms) || departmentData.bathrooms <= 0) { showToast('Los baños deben ser un número positivo.', 'error'); return; }
+    const contactRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$|^[0-9\s\-\(\)\+]{7,}$/;
+    if (!contactRegex.test(departmentData.contact)) { showToast('Formato de contacto inválido. Ingrese un email o un número de teléfono válido (mín. 7 dígitos).', 'error'); return; }
 
-    await saveDepartment(departmentData);
+    const imageFile = imageUpload.files.length > 0 && imageUrlUnchanged.value === 'false' ? imageUpload.files[0] : null;
+
+    await saveDepartment(departmentData, imageFile);
 });
 
-// Cargar departamentos al iniciar la página
-document.addEventListener('DOMContentLoaded', loadDepartments);
+// --- Contact Form Logic ---
+contactToggleButton.addEventListener('click', () => {
+    contactFormContainer.style.display = contactFormContainer.style.display === 'none' ? 'block' : 'none';
+});
+
+contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const inquirerName = document.getElementById('inquirer-name').value.trim();
+    const inquirerEmail = document.getElementById('inquirer-email').value.trim();
+    const inquirerPhone = document.getElementById('inquirer-phone').value.trim();
+    const inquirerMessage = document.getElementById('inquirer-message').value.trim();
+
+    if (!inquirerName) { showToast('Por favor, ingresa tu nombre.', 'error'); return; }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!inquirerEmail || !emailRegex.test(inquirerEmail)) { showToast('Por favor, ingresa un email válido.', 'error'); return; }
+    if (!inquirerMessage) { showToast('El mensaje no puede estar vacío.', 'error'); return; }
+
+    showToast('Consulta enviada con éxito. El publicador se contactará pronto.', 'success');
+    console.log('Consulta enviada:', {
+        departmentTitle: document.getElementById('department-title').textContent,
+        inquirerName,
+        inquirerEmail,
+        inquirerPhone,
+        inquirerMessage
+    });
+    contactForm.reset();
+    contactFormContainer.style.display = 'none';
+});
+
+// --- Paginación (Adaptada para datos cargados) ---
+function renderPaginationControls() {
+    const totalPages = Math.ceil(totalDepartmentsCount / itemsPerPage);
+    paginationControls.innerHTML = '';
+
+    if (allDepartments.length === 0 && (currentSearchTerm === '' || (currentUser && userActionButton.dataset.view === 'my-listings'))) {
+        paginationControls.style.display = 'none';
+        return;
+    }
+
+    paginationControls.style.display = 'flex';
+
+    const prevButton = document.createElement('button');
+    prevButton.textContent = 'Anterior';
+    prevButton.classList.add('pagination-button');
+    prevButton.disabled = currentPage === 1;
+    prevButton.addEventListener('click', () => goToPage(currentPage - 1));
+    paginationControls.appendChild(prevButton);
+
+    const maxPageNumbersToShow = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxPageNumbersToShow / 2));
+    let endPage = Math.min(totalPages, startPage + maxPageNumbersToShow - 1);
+
+    if (endPage - startPage + 1 < maxPageNumbersToShow) {
+        startPage = Math.max(1, endPage - maxPageNumbersToShow + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        pageButton.classList.add('pagination-button');
+        if (i === currentPage) {
+            pageButton.classList.add('active');
+        }
+        pageButton.addEventListener('click', () => goToPage(i));
+        paginationControls.appendChild(pageButton);
+    }
+
+    const nextButton = document.createElement('button');
+    nextButton.textContent = 'Siguiente';
+    nextButton.classList.add('pagination-button');
+    nextButton.disabled = currentPage === totalPages || totalPages === 0;
+    nextButton.addEventListener('click', () => goToPage(currentPage + 1));
+    paginationControls.appendChild(nextButton);
+}
+
+function goToPage(page) {
+    const userOnly = currentUser && userActionButton.dataset.view === 'my-listings';
+    currentPage = page;
+    loadDepartments(currentPage, userOnly);
+}
+
+// --- Autenticación con Firebase Auth ---
+window.onAuthStateChanged(window.auth, (user) => {
+    currentUser = user;
+    updateUserUI();
+    loadDepartments(currentPage, userActionButton.dataset.view === 'my-listings');
+});
+
+function updateUserUI() {
+    if (currentUser) {
+        userActionButton.textContent = `Hola, ${currentUser.displayName || currentUser.email} (Mis Publicaciones)`;
+        userNameDisplay.textContent = currentUser.displayName || '';
+        userEmailDisplay.textContent = currentUser.email || '';
+        publishButton.style.display = 'block';
+        logoutButton.style.display = 'block';
+    } else {
+        userActionButton.textContent = 'Iniciar Sesión / Registrarse';
+        userNameDisplay.textContent = '';
+        userEmailDisplay.textContent = '';
+        publishButton.style.display = 'none';
+        logoutButton.style.display = 'none';
+    }
+    if (!currentUser && userActionButton.dataset.view === 'my-listings') {
+        userActionButton.dataset.view = 'all';
+    }
+}
+
+userActionButton.addEventListener('click', () => {
+    if (currentUser) {
+        if (userActionButton.dataset.view === 'all') {
+            userActionButton.dataset.view = 'my-listings';
+            userActionButton.textContent = `Hola, ${currentUser.displayName || currentUser.email} (Todas las Publicaciones)`;
+            loadDepartments(1, true);
+        } else {
+            userActionButton.dataset.view = 'all';
+            userActionButton.textContent = `Hola, ${currentUser.displayName || currentUser.email} (Mis Publicaciones)`;
+            loadDepartments(1, false);
+        }
+    } else {
+        authTitle.textContent = 'Inicia Sesión o Regístrate';
+        authNameGroup.style.display = 'block';
+        authForm.dataset.mode = 'register';
+        authToggleLink.textContent = '¿Ya tienes una cuenta? Inicia Sesión aquí.';
+        openModal(modalAuth);
+    }
+});
+
+authForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('auth-email').value.trim();
+    const password = document.getElementById('auth-password').value.trim();
+    const name = document.getElementById('auth-name').value.trim();
+    const mode = authForm.dataset.mode;
+
+    if (!email || !password) {
+        showToast('El email y la contraseña son obligatorios.', 'error');
+        return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showToast('Por favor, ingresa un email válido.', 'error');
+        return;
+    }
+    if (password.length < 6) {
+        showToast('La contraseña debe tener al menos 6 caracteres.', 'error');
+        return;
+    }
+
+    try {
+        if (mode === 'register') {
+            if (!name) {
+                showToast('El nombre es obligatorio para registrarse.', 'error');
+                return;
+            }
+            const userCredential = await window.createUserWithEmailAndPassword(window.auth, email, password);
+            await window.updateProfile(userCredential.user, { displayName: name });
+            showToast(`Bienvenido, ${name}! Te has registrado exitosamente.`, 'success');
+        } else {
+            await window.signInWithEmailAndPassword(window.auth, email, password);
+            showToast(`Bienvenido de nuevo!`, 'success');
+        }
+        closeModal(modalAuth);
+    } catch (error) {
+        console.error('Error de autenticación:', error.code, error.message);
+        let errorMessage = 'Error de autenticación. Intente de nuevo.';
+        if (error.code === 'auth/email-already-in-use') {
+            errorMessage = 'Este email ya está registrado.';
+        } else if (error.code === 'auth/invalid-email') {
+            errorMessage = 'Email inválido.';
+        } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+            errorMessage = 'Email o contraseña incorrectos.';
+        } else if (error.code === 'auth/weak-password') {
+            errorMessage = 'La contraseña es demasiado débil (mínimo 6 caracteres).';
+        }
+        showToast(errorMessage, 'error');
+    }
+});
+
+authToggleLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (authForm.dataset.mode === 'register') {
+        authForm.dataset.mode = 'login';
+        authTitle.textContent = 'Iniciar Sesión';
+        authNameGroup.style.display = 'none';
+        authToggleLink.textContent = '¿No tienes una cuenta? Regístrate aquí.';
+    } else {
+        authForm.dataset.mode = 'register';
+        authTitle.textContent = 'Registrarse';
+        authNameGroup.style.display = 'block';
+        authToggleLink.textContent = '¿Ya tienes una cuenta? Inicia Sesión aquí.';
+    }
+    authForm.reset();
+});
+
+function logout() {
+    window.signOut(window.auth).then(() => {
+        showToast('Sesión cerrada correctamente.', 'info');
+    }).catch((error) => {
+        console.error('Error al cerrar sesión:', error);
+        showToast('Error al cerrar sesión.', 'error');
+    });
+}
+logoutButton.addEventListener('click', logout);
