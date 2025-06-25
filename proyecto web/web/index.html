@@ -4,13 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Departamentos en Alquiler | Tu Espacio Ideal</title>
-    
     <meta name="description" content="Encuentra tu departamento ideal para alquilar. Amplia selección de propiedades con fotos, precios y contacto directo. Tu próximo hogar te espera.">
-    
     <meta name="keywords" content="departamentos alquiler, apartamentos, propiedades, buscar alquiler, tu espacio ideal, inmuebles, Argentina">
-
     <meta name="google-site-verification" content="4IgPMRaPXAJXkBQ5jLiRj-nhBahizzp4xSjYxtWzKf0" /> 
-
     <link rel="stylesheet" href="style.min.css">
     <script src="script.min.js" defer></script>
 </head>
@@ -45,6 +41,16 @@
                     <input type="number" id="max-price" placeholder="Máximo">
                 </div>
 
+                <div class="sort-controls">
+                    <label for="sort-by">Ordenar por:</label>
+                    <select id="sort-by">
+                        <option value="none">Sin ordenar</option>
+                        <option value="price-asc">Precio (menor a mayor)</option>
+                        <option value="price-desc">Precio (mayor a menor)</option>
+                        <option value="bedrooms-asc">Habitaciones (menor a mayor)</option>
+                        <option value="bedrooms-desc">Habitaciones (mayor a menor)</option>
+                    </select>
+                </div>
                 <button id="search-button">Buscar</button>
                 <button id="clear-search-button">Limpiar</button>
             </div>
