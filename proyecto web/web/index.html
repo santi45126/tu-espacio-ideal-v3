@@ -3,25 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Departamentos en Alquiler en Chimbas | Tu Espacio Ideal</title>
+    <title>Departamentos en Alquiler | Tu Espacio Ideal</title>
     
-    <meta name="description" content="Encuentra tu departamento ideal en Chimbas, San Juan. Alquiler de apartamentos con fotos, precios y contacto directo. Tu próximo hogar te espera.">
+    <meta name="description" content="Encuentra tu departamento ideal para alquilar. Amplia selección de propiedades con fotos, precios y contacto directo. Tu próximo hogar te espera.">
     
-    <meta name="keywords" content="departamentos Chimbas, alquiler Chimbas, apartamentos San Juan, propiedades Chimbas, buscar alquiler Chimbas, tu espacio ideal, San Juan, Argentina">
+    <meta name="keywords" content="departamentos alquiler, apartamentos, propiedades, buscar alquiler, tu espacio ideal, inmuebles, Argentina">
 
     <meta name="google-site-verification" content="4IgPMRaPXAJXkBQ5jLiRj-nhBahizzp4xSjYxtWzKf0" /> 
+
     <link rel="stylesheet" href="style.min.css">
     <script src="script.min.js" defer></script>
 </head>
 <body>
-    <div id="toast-container"></div> <header>
-        <h1>Tu Espacio Ideal</h1> <p>Tu próximo departamento te espera. Fácil, rápido y a tu medida.</p> </header>
+    <div id="toast-container"></div>
+
+    <header>
+        <h1>Tu Espacio Ideal</h1>
+        <p>Tu próximo departamento te espera. Fácil, rápido y a tu medida.</p>
+    </header>
 
     <main>
         <section id="listings">
             <h2>Departamentos Disponibles</h2>
             <div class="search-bar">
-                <input type="text" id="search-input" placeholder="Buscar por ubicación, título, etc.">
+                <input type="text" id="search-input" placeholder="Buscar por ciudad, barrio o características...">
                 
                 <div class="filters">
                     <label for="min-bedrooms">Habitaciones (mín):</label>
@@ -67,7 +72,7 @@
                     <input type="text" id="title" name="title" required>
                 </div>
                 <div>
-                    <label for="location">Ubicación (Ej: Chimbas):</label>
+                    <label for="location">Ubicación (Ej: Ciudad, Barrio):</label>
                     <input type="text" id="location" name="location" required>
                 </div>
                 <div>
@@ -105,7 +110,7 @@
         <div class="modal-content">
             <span class="close-button">&times;</span>
             <h2 id="department-title"></h2>
-            <img id="department-image" src="" alt="Imagen del departamento en detalle" loading="lazy">
+            <img id="department-image" src="" alt="Imagen del departamento" loading="lazy">
             <p><strong>Ubicación:</strong> <span id="department-location"></span></p>
             <p><strong>Precio:</strong> $<span id="department-price"></span></p>
             <p><strong>Habitaciones:</strong> <span id="department-bedrooms"></span></p>
